@@ -5,3 +5,8 @@
 *.cma
 *.cmxa
 *.o
+*.a
+*.cmi
+
+*.omc
+.omakedb*

@@ -23,15 +23,7 @@ open MyOCaml
 ########################################################################
 # Phony targets are scoped, so you probably want to declare them first.
 #
-.PHONY: test clean doc all
-
-########################################################################
-# Subdirectories.
-# You may want to include some subdirectories in this project.
-# If so, define the subdirectory targets and uncomment this section.
-#
-
-.SUBDIRS: src test
+.PHONY: test clean
 
 ########################################################################
 # OCaml configuration.
@@ -52,6 +44,7 @@ INSTALLED = $(BIG_ROOT)/installed
 USE_OCAMLFIND = true
 #
 OCAMLPACKS[] =
+	ppx_simplespec
 #
 if $(not $(OCAMLFIND_EXISTS))
     eprintln(This project requires ocamlfind, but is was not found.)
@@ -61,7 +54,7 @@ if $(not $(OCAMLFIND_EXISTS))
 #
 # Include path
 #
-OCAMLINCLUDES += src
+OCAMLINCLUDES += ../src
 
 #
 # Compile native or byte code?
@@ -74,7 +67,7 @@ BYTE_ENABLED = $(not $(OCAMLOPT_EXISTS))
 #
 # Various options
 #
-OCAMLFLAGS    += 
+OCAMLFLAGS    += -linkpkg
 OCAMLCFLAGS   +=
 OCAMLOPTFLAGS +=
 # OCAML_LINK_FLAGS +=
@@ -93,14 +86,16 @@ OCAMLOPTFLAGS +=
 # Build an OCaml program
 #
 
-# OCAML_LIBS +=
+OCAML_LIBS += ../src/typedvec
 # OCAML_CLIBS +=
 # OCAML_OTHER_LIBS += nums
 # OCAML_LIB_FLAGS +=
 #
-LIB = typedvec
 
-.DEFAULT: all
+PROGRAM=test_suite
 
-install:
-	CreateInstalled($(LIB), $(glob i, src/*ml) $(glob i, src/*c))
+OCamlProgram($(PROGRAM), $(removesuffix .ml, $(ls *.ml)))
+
+test: $(PROGRAM)
+	./$(PROGRAM)
+

@@ -1,0 +1,7 @@
+name = "typedvec"
+version = "0.1.0"
+description = ""
+
+requires = ""
+archive(byte) = "typedvec.cma"
+archive(native) = "typedvec.cmxa"

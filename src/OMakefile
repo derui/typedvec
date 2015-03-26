@@ -61,7 +61,7 @@ OCAMLINCLUDES +=
 # The default values are defined as follows:
 #
 NATIVE_ENABLED = $(OCAMLOPT_EXISTS)
-BYTE_ENABLED = $(not $(OCAMLOPT_EXISTS))
+BYTE_ENABLED = true
 
 #
 # Various options
@@ -90,9 +90,12 @@ OCAMLOPTFLAGS +=
 # OCAML_OTHER_LIBS += nums
 # OCAML_LIB_FLAGS +=
 #
+LIB = typedvec
+FILES = $(removesuffix .ml, $(ls *ml))
+SUPPORT_FILES = $(addsuffix .cmt, $(FILES))
 
-MyOCamlPackage($(LIB), $(glob i, src/*ml), $(EMPTY), -linkall, true)
+MyOCamlPackage($(LIB), $(removesuffix .ml, $(ls *ml)), $(EMPTY), -linkall, true)
 
-all: $(LIB)
+all: $(LIB).cma $(LIB).cmxa $(SUPPORT_FILES)
 
 .DEFAULT: all
