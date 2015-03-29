@@ -4,12 +4,21 @@ module V = Typedvec.Vec
 let%spec "Make array from size" =
   let v = V.make S.two 0 in
   (V.size v |> S.to_int) [@eq 2];
-  ([V.get v 0; V.get v 1]) [@eq [0;0]]
+  ([V.unsafe_get v 0; V.unsafe_get v 1]) [@eq [0;0]]
 
 let%spec "Vec can manipulate each element" =
   let v = V.make S.two 0 in
+  V.unsafe_set v 0 100;
+  (V.unsafe_get v 0) [@eq 100]
+
+let%spec "Vec can manipulate each element with safe function" =
+  let v = V.make S.two 0 in
   V.set v 0 100;
-  (V.get v 0) [@eq 100]
+  V.get v 0 [@eq (Some 100)];
+  V.set v (-1) 10;
+  V.get v (-1) [@eq None];
+  V.set v 2 20;
+  V.get v 2 [@eq None]
 
 let%spec "Vec can convert to list" =
   let v = V.init S.two (( * ) 2) in
@@ -43,22 +52,52 @@ let%spec "Vec can fold right to any vector" =
 
 let%spec "Vec can predicate for all element" =
   let v = V.init S.three (fun i -> succ i) in
-  V.for_all ~f:(fun e -> e > 0) v [@eq true];
-  V.for_all ~f:(fun e -> e > 1) v [@eq false];
+  V.for_all ~f:(fun e -> e > 0) v [@true];
+  V.for_all ~f:(fun e -> e > 1) v [@false];
   let v = V.make S.zero 0 in
-  V.for_all ~f:(fun e -> e > 0) v [@eq true]
+  V.for_all ~f:(fun e -> e > 0) v [@true]
 
 let%spec "Vec can detect to exist element that is predicated or not" =
   let v = V.init S.three (fun i -> succ i) in
-  V.exists ~f:(fun e -> e > 0) v [@eq true];
-  V.exists ~f:(fun e -> e = 3) v [@eq true];
-  V.exists ~f:(fun e -> e < 1) v [@eq false];
+  V.exists ~f:(fun e -> e > 0) v [@true];
+  V.exists ~f:(fun e -> e = 3) v [@true];
+  V.exists ~f:(fun e -> e < 1) v [@false];
   let v = V.make S.zero 0 in
-  V.exists ~f:(fun e -> e = 0) v [@eq false]
+  V.exists ~f:(fun e -> e = 0) v [@false]
 
 let%spec "Vec can be contained member in the vector" =
   let v = V.init S.four (fun i -> succ i) in
-  V.mem ~member:1 v [@eq true];
-  V.mem ~member:0 v [@eq false];
+  V.mem ~member:1 v [@true];
+  V.mem ~member:0 v [@false];
   let v = V.init S.four (fun i -> [i]) in
-  V.memq ~member:[1] v [@eq false]
+  V.memq ~member:[1] v [@false]
+
+let%spec "Vec can do map iteration with 2 vectors" =
+  let v1 = V.init S.three (fun i -> succ i)
+  and v2 = V.init S.three (fun i -> pred i) in
+  let mapped = V.map2 ~f:(fun a b -> a * b) ~v1 ~v2 in
+  V.to_list mapped [@eq [-1;0;3]]
+
+let%spec "Vec can do iteration with 2 vectors" =
+  let v1 = V.init S.three (fun i -> succ i)
+  and v2 = V.init S.three (fun i -> i + 2) in
+  let r = ref 0 in
+  V.iter2 ~f:(fun a b -> r := !r + (a * b)) ~v1 ~v2;
+  !r [@eq 20]
+
+let%spec "Vec can zip 2 vectors to one vector" =
+  let v1 = V.init S.three (fun i -> succ i)
+  and v2 = V.init S.three (fun i -> i + 2) in
+  let zipped = V.zip ~v1 ~v2 in
+  V.to_list zipped [@eq [(1,2);(2,3);(3,4)]]
+
+
+let%spec "Vec can copy to new allocated vector" =
+  let v = V.init S.three (fun i -> succ i) in
+  (V.copy v |> V.to_list) [@eq [1;2;3]]
+
+let %spec "Vec can copy to already allocated vector" =
+  let v = V.init S.three (fun i -> succ i)
+  and v2 = V.make S.three (-1) in
+  V.copy ~y:v2 v |> ignore;
+  V.to_list v2 [@eq [1;2;3]]
