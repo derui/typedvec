@@ -5,11 +5,13 @@ type (+'n, 'b) t = {
 
 let make size init =
   let size' = Size.to_int size in
-  {data = Array.make size' init; size}
+  if size' < 1 then raise (Invalid_argument "Vector size must be greater than 1")
+  else {data = Array.make size' init; size}
 
 let init size f =
   let size' = Size.to_int size in
-  {data = Array.init size' f; size}
+  if size' < 1 then raise (Invalid_argument "Vector size must be greater than 1")
+  else {data = Array.init size' f; size}
 
 let size {size;_} = size
 

@@ -91,11 +91,9 @@ OCAMLOPTFLAGS +=
 # OCAML_LIB_FLAGS +=
 #
 LIB = typedvec
-FILES = $(removesuffix .ml, $(ls *ml))
-SUPPORT_FILES = $(addsuffix .cmt, $(FILES))
 
 MyOCamlPackage($(LIB), $(removesuffix .ml, $(ls *ml)), $(EMPTY), -linkall, true)
 
-all: $(LIB).cma $(LIB).cmxa $(SUPPORT_FILES)
+all: $(LIB).cma $(LIB).cmxa
 
 .DEFAULT: all

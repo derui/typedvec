@@ -1,10 +1,16 @@
 module S = Typedvec.Size
-module V = Typedvec.Vec
+module V = Typedvec.Vector
 
 let%spec "Make array from size" =
   let v = V.make S.two 0 in
   (V.size v |> S.to_int) [@eq 2];
   ([V.unsafe_get v 0; V.unsafe_get v 1]) [@eq [0;0]]
+
+let%spec "Vec should raise Invalid_argument when make with given size less than 1" =
+  (fun () -> V.make S.zero 0) [@raises Invalid_argument "Vector size must be greater than 1"]
+
+let%spec "Vec should raise Invalid_argument when init with given size less than 1" =
+  (fun () -> V.init S.zero (fun _ -> 0)) [@raises Invalid_argument "Vector size must be greater than 1"]
 
 let%spec "Vec can manipulate each element" =
   let v = V.make S.two 0 in
@@ -54,16 +60,16 @@ let%spec "Vec can predicate for all element" =
   let v = V.init S.three (fun i -> succ i) in
   V.for_all ~f:(fun e -> e > 0) v [@true];
   V.for_all ~f:(fun e -> e > 1) v [@false];
-  let v = V.make S.zero 0 in
-  V.for_all ~f:(fun e -> e > 0) v [@true]
+  let v = V.make S.one 0 in
+  V.for_all ~f:(fun e -> e > 0) v [@false]
 
 let%spec "Vec can detect to exist element that is predicated or not" =
   let v = V.init S.three (fun i -> succ i) in
   V.exists ~f:(fun e -> e > 0) v [@true];
   V.exists ~f:(fun e -> e = 3) v [@true];
   V.exists ~f:(fun e -> e < 1) v [@false];
-  let v = V.make S.zero 0 in
-  V.exists ~f:(fun e -> e = 0) v [@false]
+  let v = V.make S.one 0 in
+  V.exists ~f:(fun e -> e = 0) v [@true]
 
 let%spec "Vec can be contained member in the vector" =
   let v = V.init S.four (fun i -> succ i) in
