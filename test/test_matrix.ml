@@ -27,3 +27,11 @@ let%spec "Mat can transpose some matrix" =
   let mat = M.transpose mat in
   (M.row_size mat |> S.to_int) [@eq 3];
   (M.col_size mat |> S.to_int) [@eq 2]
+
+let%spec "Matrix can make with function for index arguments" =
+  let mat = M.init ~row:S.two ~col:S.three ~f:(fun r c -> (r,c)) in
+  (M.get ~col:0 ~row:0 mat) [@eq Some (0,0)];
+  (M.get ~col:1 ~row:0 mat) [@eq Some (0,1)];
+  (M.get ~col:0 ~row:1 mat) [@eq Some (1,0)];
+  (M.get ~col:1 ~row:1 mat) [@eq Some (1,1)];
+  (M.get ~col:2 ~row:1 mat) [@eq Some (1,2)]
