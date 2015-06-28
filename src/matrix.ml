@@ -1,5 +1,5 @@
-module S = Size 
-module V = Vector 
+module S = Size
+module V = Vector
 
 type (+'row, 'col, 'd) t = {
   data: ('row, ('col, 'd) Vector.t) Vector.t;
@@ -22,13 +22,9 @@ let init ~row ~col ~f =
       ) col_range
     ) row_range;
 
-    {data = mat;
-     row_size = row;
-     col_size = col;
-    }
+    {data = mat; row_size = row; col_size = col;}
 
 let make ~row ~col ~init:v = init ~row ~col ~f:(fun _ _ -> v)
-
 
 let row_size {row_size;_} = row_size
 let col_size {col_size;_} = col_size
@@ -45,6 +41,10 @@ let unsafe_get ~row ~col mat =
   | None -> failwith "Invalid boundary of matrix"
   | Some v -> v
 
+let set ~row ~col ~v mat =
+  match get_row ~row mat with
+  | Some r -> Vector.set r col v
+  | None -> failwith "Invalid column"
+
 let transpose: ('a Size.t, 'b Size.t, 'c) t -> ('b Size.t, 'a Size.t, 'c) t = fun mat ->
-  let mat' = make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat) in
-  mat'
+  make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)

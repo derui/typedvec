@@ -35,3 +35,8 @@ let%spec "Matrix can make with function for index arguments" =
   (M.get ~col:0 ~row:1 mat) [@eq Some (1,0)];
   (M.get ~col:1 ~row:1 mat) [@eq Some (1,1)];
   (M.get ~col:2 ~row:1 mat) [@eq Some (1,2)]
+
+let%spec "Matrix can set a value at specified position" =
+  let mat = M.init ~row:S.two ~col:S.three ~f:(fun r c -> (r,c)) in
+  M.set ~col:0 ~row:0 ~v:(100,100) mat;
+  (M.get ~col:0 ~row:0 mat) [@eq Some (100,100)]

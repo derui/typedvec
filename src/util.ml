@@ -5,4 +5,4 @@ let range n =
     if n = 0 then list
     else let n' = pred n in range' n' (n' :: list)
   in
-  range' n []
+  if n < 0 then [] else range' n []
