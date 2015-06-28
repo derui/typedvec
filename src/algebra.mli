@@ -13,5 +13,5 @@ type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t
 
 type +'s vec = ('s, num_type) Vec.t
 
-val cross: left:Size.three vec -> right:Size.three vec -> Size.three vec
+val cross: left:Size.three Size.t vec -> right:Size.three Size.t vec -> Size.three Size.t vec
 (** [cross ~left ~right] gets new vector is cross product via 2 vectors. *)
