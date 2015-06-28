@@ -40,3 +40,4 @@ let%spec "Matrix can set a value at specified position" =
   let mat = M.init ~row:S.two ~col:S.three ~f:(fun r c -> (r,c)) in
   M.set ~col:0 ~row:0 ~v:(100,100) mat;
   (M.get ~col:0 ~row:0 mat) [@eq Some (100,100)]
+

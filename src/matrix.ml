@@ -1,50 +1,55 @@
 module S = Size
 module V = Vector
 
-type (+'row, 'col, 'd) t = {
-  data: ('row, ('col, 'd) Vector.t) Vector.t;
-  row_size: 'row;
-  col_size: 'col;
-}
+include Matrix_intf
 
-let init ~row ~col ~f =
-  let col' = S.to_int col
-  and row' = S.to_int row in
-  if col' < 1 || row' < 1 then raise (Invalid_argument ("Matrix size must be greater than 1"))
-  else
-    let cols = Vector.make col (f 0 0) in
-    let mat = Vector.init row (fun _ -> V.copy cols) in
-    let col_range = Util.range col'
-    and row_range = Util.range row' in
-    List.iter (fun r -> List.iter
-      (fun c ->
-        let row = V.unsafe_get mat r in V.set row c (f r c)
-      ) col_range
-    ) row_range;
+module Make(T:TYPE):S with type num_type := T.num_type = struct
 
-    {data = mat; row_size = row; col_size = col;}
+  type num_type = T.num_type
+  type (+'row, 'col, 'd) t = {
+    data: num_type array array;
+    row_size: 'row;
+    col_size: 'col;
+  }
 
-let make ~row ~col ~init:v = init ~row ~col ~f:(fun _ _ -> v)
+  let init ~row ~col ~f =
+    let col' = S.to_int col
+    and row' = S.to_int row in
+    if col' < 1 || row' < 1 then raise (Invalid_argument ("Matrix size must be greater than 1"))
+    else
+      let cols = Array.init col' (fun _ -> f 0 0) in
+      let mat = Array.init row' (fun _ -> Array.copy cols) in
+      let col_range = Util.range col'
+      and row_range = Util.range row' in
+      List.iter (fun r -> List.iter
+        (fun c ->
+          mat.(r).(c) <- f r c
+        ) col_range
+      ) row_range;
 
-let row_size {row_size;_} = row_size
-let col_size {col_size;_} = col_size
+      {data = mat; row_size = row; col_size = col;}
 
-let get_row ~row mat = Vector.get mat.data row
-let get ~row ~col mat =
-  let row = Vector.get mat.data row in
-  match row with
-  | None -> None
-  | Some row -> Vector.get row col
+  let make ~row ~col ~init:v = init ~row ~col ~f:(fun _ _ -> v)
 
-let unsafe_get ~row ~col mat =
-  match get ~row ~col mat with
-  | None -> failwith "Invalid boundary of matrix"
-  | Some v -> v
+  let row_size {row_size;_} = row_size
+  let col_size {col_size;_} = col_size
 
-let set ~row ~col ~v mat =
-  match get_row ~row mat with
-  | Some r -> Vector.set r col v
-  | None -> failwith "Invalid column"
+  let get ~row ~col mat =
+    if Array.length mat.data >= row then None
+    else
+    let row = mat.data.(row) in
+    Some row.(col)
 
-let transpose: ('a Size.t, 'b Size.t, 'c) t -> ('b Size.t, 'a Size.t, 'c) t = fun mat ->
-  make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)
+  let unsafe_get ~row ~col mat =
+    match get ~row ~col mat with
+    | None -> failwith "Invalid boundary of matrix"
+    | Some v -> v
+
+  let set ~row ~col ~v mat =
+    if Array.length mat.data >= row then failwith "Invalid row"
+    else if Array.length mat.data.(row) >= col then failwith "Invalid column"
+    else mat.data.(row).(col) <- v
+
+  let transpose: ('a Size.t, 'b Size.t, 'c) t -> ('b Size.t, 'a Size.t, 'c) t = fun mat ->
+    make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)
+end

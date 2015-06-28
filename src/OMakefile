@@ -92,7 +92,17 @@ OCAMLOPTFLAGS +=
 #
 LIB = typedvec
 
-MyOCamlPackage($(LIB), $(removesuffix .ml, $(ls *ml)), $(EMPTY), -linkall, true)
+FILES[]=
+	util
+	size
+	vector_intf
+	vector
+	matrix_intf
+	matrix
+	algebra
+	std
+
+MyOCamlPackage($(LIB), $(FILES), $(EMPTY), -linkall, true)
 
 all: $(LIB).cma $(LIB).cmxa
 
