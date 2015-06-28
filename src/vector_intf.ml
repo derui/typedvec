@@ -42,10 +42,10 @@ module type S = sig
   val zip: v1:('a, num_type) t -> v2:('a, 'c) t -> ('a, num_type * 'c) t
 
   val fold_left: f:('a -> num_type -> 'a) -> init:'a -> ('n, num_type) t -> 'a
-  val fold_right: f:('a -> num_type -> num_type) -> init:num_type -> ('n, 'a) t -> num_type
+  val fold_right: f:(num_type -> 'b -> 'b) -> init:'b -> ('n, num_type) t -> 'b
 
   (* Get new array converted from vector inner data structure. *)
-  val to_list : ('a, num_type) t -> num_type list
+  val to_list : ('a, 'b) t -> 'b list
 
   (* Predications. These functions has similarity behaviour in List module. *)
   val for_all : f:(num_type -> bool) -> ('a, num_type) t -> bool

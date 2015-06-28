@@ -1,5 +1,8 @@
-module S = Typedvec.Size
-module V = Typedvec.Vector
+module Std = Typedvec.Std
+module S = Std.Size
+module V = Std.Vec.Make(struct
+  type num_type = int
+    end)
 
 let%spec "Make array from size" =
   let v = V.make S.two 0 in
@@ -75,6 +78,9 @@ let%spec "Vec can be contained member in the vector" =
   let v = V.init S.four (fun i -> succ i) in
   V.mem ~member:1 v [@true];
   V.mem ~member:0 v [@false];
+  let module V = Std.Vec.Make(struct
+    type num_type = int list
+  end) in
   let v = V.init S.four (fun i -> [i]) in
   V.memq ~member:[1] v [@false]
 

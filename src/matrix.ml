@@ -35,10 +35,9 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
   let col_size {col_size;_} = col_size
 
   let get ~row ~col mat =
-    if Array.length mat.data >= row then None
-    else
-    let row = mat.data.(row) in
-    Some row.(col)
+    if Array.length mat.data <= row then None
+    else if Array.length mat.data.(row) <= col then None
+    else Some mat.data.(row).(col)
 
   let unsafe_get ~row ~col mat =
     match get ~row ~col mat with
@@ -46,10 +45,10 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
     | Some v -> v
 
   let set ~row ~col ~v mat =
-    if Array.length mat.data >= row then failwith "Invalid row"
-    else if Array.length mat.data.(row) >= col then failwith "Invalid column"
+    if Array.length mat.data <= row then failwith "Invalid row"
+    else if Array.length mat.data.(row) <= col then failwith "Invalid column"
     else mat.data.(row).(col) <- v
 
-  let transpose: ('a Size.t, 'b Size.t, 'c) t -> ('b Size.t, 'a Size.t, 'c) t = fun mat ->
+  let transpose mat =
     make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)
 end
