@@ -5,9 +5,8 @@ include Matrix_intf
 
 module Make(T:TYPE):S with type num_type := T.num_type = struct
 
-  type num_type = T.num_type
   type (+'row, 'col, 'd) t = {
-    data: num_type array array;
+    data: 'd array array;
     row_size: 'row;
     col_size: 'col;
   }
@@ -51,4 +50,17 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
 
   let transpose mat =
     make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)
+
+  let copy mat = 
+    let newary = Array.copy mat.data in
+    Array.iteri (fun i _ -> newary.(i) <- Array.copy mat.data.(i)) newary;
+    {mat with data = newary}
+
+  let map ~f mat =
+    let row = Size.to_int mat.row_size |> Util.range
+    and col = Size.to_int mat.col_size |> Util.range in
+    let fn = (fun row _ ->
+      List.mapi (fun col _ -> f row col mat.data.(row).(col)) col |> Array.of_list) in
+    let data = List.mapi fn row in
+    {data = Array.of_list data;row_size = mat.row_size; col_size = mat.col_size}
 end

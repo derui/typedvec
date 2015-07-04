@@ -3,11 +3,23 @@ type num_type = float
 
 module Mat : sig
   include Matrix_intf.S with type num_type := num_type
+  (* # Operations for Matrix. *)
+
+  type 'a s = 'a Size.t
+
+  val identity: 'a s -> ('a s, 'a s, num_type) t
+  (* [identity size] get the identity matrix having [size] rows and [size] columns. *)
+
+  val scalar: m:('a s, 'b s, num_type) t -> scale:num_type -> ('a s, 'b s, num_type) t
+  (* [scalar ~m ~scale] get the scaled matrix that multiply scale with each elements of [m] *)
+
+  val diagonal: size:'a s -> comp:num_type -> ('a s, 'a s, num_type) t
+(* [diagonal ~size ~comp] get the diagonal matrix having [size] rows and columns, and each component
+   is [comp]. *)
 end
 
 module Vec : sig
   include Vector_intf.S with type num_type := num_type
-
 
   (* # Operations for Vector. *)
 
@@ -21,9 +33,9 @@ module Vec : sig
   (* [dot a b] get the new vector that dot product via [a] and [b]. *)
 
   val div : ('a, num_type) t -> num_type -> ('a, num_type) t
-(* [div a divisor] get the divided [a] with [divisor]. Notice vector getting from this is new
-   one from [a]
-*)
+  (* [div a divisor] get the divided [a] with [divisor]. Notice vector getting from this is new
+     one from [a]
+  *)
 
   val cross: left:(Size.three Size.t, num_type) t -> right:(Size.three Size.t, num_type) t
     -> (Size.three Size.t, num_type) t

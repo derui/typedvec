@@ -31,4 +31,8 @@ module type S = sig
   (** Transpose the matrix. *)
   val transpose: ('a Size.t, 'b Size.t, num_type) t -> ('b Size.t, 'a Size.t, num_type) t
 
+  val map: f:(int -> int -> 'c -> 'd) -> ('a Size.t, 'b Size.t, 'c) t -> ('a Size.t, 'b Size.t, 'd) t
+(* [map ~f mat] apply [f] each element of the matrix. The [f] given row and column index and value at
+   the row and column in the matrix.*)
+
 end

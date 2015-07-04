@@ -2,9 +2,25 @@ module S = Size
 type num_type' = float
 type num_type = num_type'
 
-module Mat = Matrix.Make(struct
-  type num_type = num_type'
-end)
+module Mat = struct
+  include Matrix.Make(struct
+    type num_type = num_type'
+  end)
+
+  type 'a s = 'a Size.t
+
+  let identity size =
+    let s = Size.to_int size in
+    if s <= 0 then failwith "Size of identity Matrix must greater equal 1."
+    else let m = make ~row:size ~col:size ~init:0.0 in
+         Util.range s |> List.iter (fun i -> set ~row:i ~col:i ~v:1.0 m);
+         m
+
+  let scalar ~m ~scale = map ~f:(fun _ _ v -> v *. scale) m
+  let diagonal ~size ~comp =
+    let m = identity size in
+    scalar ~m ~scale:comp
+end
 
 module V = Vector.Make(struct
   type num_type = num_type'

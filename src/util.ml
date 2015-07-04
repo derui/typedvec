@@ -1,4 +1,5 @@
 let id e = e
+let flip f a b = f b a
 
 let range n =
   let rec range' n list =
