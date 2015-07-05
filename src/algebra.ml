@@ -65,6 +65,8 @@ module Mat = struct
     ) cols;
     mat
 
+  let scalar ~scale mat = map ~f:(fun _ _ v -> v *. scale) mat
+
 end
 
 type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t

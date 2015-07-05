@@ -21,10 +21,13 @@ module Mat : sig
   (* [add a b] get result to add [b] to [a]. *)
 
   val sub: ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
-    (* [sub a b] get result to subtract [b] from [a]. *)
+  (* [sub a b] get result to subtract [b] from [a]. *)
 
   val mul: ('a s, 'b s, num_type) t -> ('b s, 'c s, num_type) t -> ('a s, 'c s, num_type) t
-(* [mul a b] get result to multiply [a] with [b]. *)
+  (* [mul a b] get result to multiply [a] with [b]. *)
+
+  val scalar: scale:float -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
+(* [scalar ~scale mat] get scalar multiple matrix. *)
 
 end
 
