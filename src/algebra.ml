@@ -20,6 +20,15 @@ module Mat = struct
   let diagonal ~size ~comp =
     let m = identity size in
     scalar ~m ~scale:comp
+
+  let apply_each_element f = function
+    | (None, _) | (_, None) -> failwith "Two matrix must have equality row and col"
+    | (Some a, Some b) -> f a b
+
+  let add a b = map ~f:(fun row col _ ->
+    apply_each_element (+.) ((get ~row ~col a), (get ~row ~col b))) a
+  let sub a b = map ~f:(fun row col _ ->
+    apply_each_element (-.) ((get ~row ~col a), (get ~row ~col b))) a
 end
 
 module V = Vector.Make(struct

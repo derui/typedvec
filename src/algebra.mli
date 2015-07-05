@@ -14,8 +14,14 @@ module Mat : sig
   (* [scalar ~m ~scale] get the scaled matrix that multiply scale with each elements of [m] *)
 
   val diagonal: size:'a s -> comp:num_type -> ('a s, 'a s, num_type) t
-(* [diagonal ~size ~comp] get the diagonal matrix having [size] rows and columns, and each component
-   is [comp]. *)
+  (* [diagonal ~size ~comp] get the diagonal matrix having [size] rows and columns, and each component
+     is [comp]. *)
+
+  val add: ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
+  (* [add a b] get result to add [b] to [a]. *)
+
+  val sub: ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
+(* [sub a b] get result to subtract [b] from [a]. *)
 end
 
 module Vec : sig

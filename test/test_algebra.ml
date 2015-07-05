@@ -53,3 +53,21 @@ let%spec "Mat.scalar should return new matrix multiply scale" =
   M.get ~row:0 ~col:1 m [@eq Some (0.0)];
   M.get ~row:1 ~col:0 m [@eq Some (0.0)];
   M.get ~row:1 ~col:1 m [@eq Some (3.0)]
+
+let%spec "Mat.add should return result to add two matrix" =
+  let a = M.init ~row:S.two ~col:S.two ~f:(fun a b -> (succ a) * (succ b) |> float_of_int) in
+  let b = M.init ~row:S.two ~col:S.two ~f:(fun a b -> succ a |> float_of_int) in
+  let c = M.add a b in
+  M.get ~row:0 ~col:0 c [@eq Some (2.0)];
+  M.get ~row:0 ~col:1 c [@eq Some (3.0)];
+  M.get ~row:1 ~col:0 c [@eq Some (4.0)];
+  M.get ~row:1 ~col:1 c [@eq Some (6.0)]
+
+let%spec "Mat.sub should return result to subtract two matrix" =
+  let a = M.init ~row:S.two ~col:S.two ~f:(fun a b -> (succ a) * (succ b) |> float_of_int) in
+  let b = M.make ~row:S.two ~col:S.two ~init:3.0 in
+  let c = M.sub a b in
+  M.get ~row:0 ~col:0 c [@eq Some (-2.0)];
+  M.get ~row:0 ~col:1 c [@eq Some (-1.0)];
+  M.get ~row:1 ~col:0 c [@eq Some (-1.0)];
+  M.get ~row:1 ~col:1 c [@eq Some (1.0)]
