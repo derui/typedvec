@@ -30,7 +30,14 @@ let%spec "Vec.dot should return result of dot product" =
 
 (* For Matrix *)
 let%spec "Mat.mul should return result of multply each matrixs" =
-  failwith "not implement"
+  let a = M.make ~col:S.two ~row:S.one ~init:0.0
+  and b = M.make ~row:S.two ~col:S.one ~init:0.0 in
+  M.set ~row:0 ~col:0 ~v:(-3.0) a;
+  M.set ~row:0 ~col:1 ~v:4.0 a;
+  M.set ~row:0 ~col:0 ~v:1.0 b;
+  M.set ~row:1 ~col:0 ~v:2.0 b;
+  let c = M.mul a b in
+  M.get ~row:0 ~col:0 c [@eq Some (5.0)]
 
 let%spec "Mat.identity should return identity matrix with size" =
   let matrix = M.identity S.two in

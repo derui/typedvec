@@ -28,6 +28,14 @@ module type S = sig
   (** Set the value to the matrix at specified row and column. *)
   val set : row:int -> col:int -> v:num_type -> ('a Size.t, 'b Size.t, num_type) t -> unit
 
+  val row_of_mat: row:int -> ('a Size.t, 'b Size.t, 'c) t -> 'c list
+  (* [row_of_mat ~row mat] get the row as list of the matrix. If [row] is greater or less than
+     number of row of the [mat], raise exception. *)
+
+  val col_of_mat: col:int -> ('a Size.t, 'b Size.t, 'c) t -> 'c list
+  (* [col_of_mat ~col mat] get the columns as list of the matrix. If [col] is greater or less than
+     number of columns of the [mat], raise exception. *)
+
   (** Transpose the matrix. *)
   val transpose: ('a Size.t, 'b Size.t, num_type) t -> ('b Size.t, 'a Size.t, num_type) t
 

@@ -63,4 +63,13 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
       List.mapi (fun col _ -> f row col mat.data.(row).(col)) col |> Array.of_list) in
     let data = List.mapi fn row in
     {data = Array.of_list data;row_size = mat.row_size; col_size = mat.col_size}
+
+  let row_of_mat ~row mat =
+    if row < 0 || (row_size mat |> Size.to_int) < row then failwith "number of row must less than matrix"
+    else Array.to_list mat.data.(row)
+
+  let col_of_mat ~col mat =
+    if col < 0 || (col_size mat |> Size.to_int) < col then failwith "number of col must less than matrix"
+    else Array.map (fun ary -> ary.(col)) mat.data |> Array.to_list
+
 end

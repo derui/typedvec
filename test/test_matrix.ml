@@ -44,3 +44,25 @@ let%spec "Matrix can set a value at specified position" =
   M.set ~col:0 ~row:0 ~v:(100,100) mat;
   (M.get ~col:0 ~row:0 mat) [@eq Some (100,100)]
 
+let%spec "Matrix should be apply function for each element of Matrix" =
+  let module M = Std.Mat.Make(struct
+    type num_type = int
+  end) in
+  let mat = M.make ~row:S.two ~col:S.two ~init:1 in
+  let r = M.map ~f:(fun row col _ -> row * 10 + col) mat in
+  (M.get ~row:0 ~col:0 r) [@eq Some (0)];
+  (M.get ~row:0 ~col:1 r) [@eq Some (1)];
+  (M.get ~row:1 ~col:0 r) [@eq Some (10)];
+  (M.get ~row:1 ~col:1 r) [@eq Some (11)]
+
+let%spec "Matrix can get row as list of the matrix" =
+  let mat = M.init ~row:S.two ~col:S.two ~f:(fun r c -> float_of_int (10 * r + c)) in
+
+  (M.row_of_mat ~row:0 mat) [@eq [0.0;1.0]];
+  (M.row_of_mat ~row:1 mat) [@eq [10.0;11.0]]
+
+let%spec "Matrix can get column as list of the matrix" =
+  let mat = M.init ~row:S.two ~col:S.two ~f:(fun r c -> float_of_int (10 * r + c)) in
+
+  (M.col_of_mat ~col:0 mat) [@eq [0.0;10.0]];
+  (M.col_of_mat ~col:1 mat) [@eq [1.0;11.0]]
