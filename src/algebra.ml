@@ -95,27 +95,21 @@ module Mat = struct
 
   (* TODO: 指定した正方行列に対する余因子行列を返す *)
   let adjugate mat =
-    let row = row_size mat |> Size.to_int |> Util.range
-    and col = col_size mat |> Size.to_int |> Util.range in
+    let row = row_size mat 
+    and col = col_size mat in
     let mat' = to_array mat in
-    let adj = to_array mat in
-    List.iter (fun row ->
-      List.iter (fun col ->
+    let adj = init ~row ~col ~f:(fun row col ->
         let cof_det = cofactor ~row ~col mat' |> inner_det in
-        adj.(col).(row) <- (factor_sign ~row ~col) *. cof_det
-      ) col
-    ) row;
-    adj
+        (factor_sign ~row ~col) *. cof_det
+    ) in
+    transpose adj
 
   let inverse mat =
     match det mat with
     | None -> None
     | Some det ->
        let adj = adjugate mat in
-       let row = row_size mat
-       and col = col_size mat in
-       let new_mat = init ~row ~col ~f:(fun r c -> adj.(r).(c)) in
-       Some (scalar ~scale:det ~m:new_mat)
+       Some (scalar ~scale:(1.0 /. det) ~m:adj)
 end
 
 type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t

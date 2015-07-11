@@ -49,7 +49,7 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
     else mat.data.(row).(col) <- v
 
   let transpose mat =
-    make ~row:mat.col_size ~col:mat.row_size ~init:(unsafe_get ~row:0 ~col:0 mat)
+    init ~row:mat.col_size ~col:mat.row_size ~f:(fun row col -> unsafe_get ~row:col ~col:row mat)
 
   let copy mat = 
     let newary = Array.copy mat.data in

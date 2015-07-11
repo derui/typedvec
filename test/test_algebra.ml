@@ -97,6 +97,23 @@ let%spec "Mat.inverse should return invserse matrix if it have inverse matrix" =
   M.set ~row:1 ~col:0 ~v:1.0 a;
   M.set ~row:1 ~col:1 ~v:3.0 a;
   let inv = M.inverse a in
-  M.to_list inv [@eq [[3.0;-5.0];
+  match inv with
+  | None -> failwith ""
+  | Some inv -> let inv = M.to_list inv in
+                inv [@eq [[3.0;-5.0];
                       [-1.0;2.0]]
                 ]
+
+let%spec "Mat.det should return determinant of matrix" = 
+  let a = M.make ~row:S.three ~col:S.three ~init:0.0 in
+  M.set ~row:0 ~col:0 ~v:3.0 a;
+  M.set ~row:0 ~col:1 ~v:4.0 a;
+  M.set ~row:0 ~col:2 ~v:(-1.0) a;
+  M.set ~row:1 ~col:0 ~v:2.0 a;
+  M.set ~row:1 ~col:1 ~v:5.0 a;
+  M.set ~row:1 ~col:2 ~v:(-2.0) a;
+  M.set ~row:2 ~col:0 ~v:1.0 a;
+  M.set ~row:2 ~col:1 ~v:6.0 a;
+  M.set ~row:2 ~col:2 ~v:(-4.0) a;
+  let det = M.det a in
+  det [@eq Some (-7.0)]
