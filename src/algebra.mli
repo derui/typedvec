@@ -7,6 +7,13 @@ module Mat : sig
 
   type 'a s = 'a Size.t
 
+  (* [Open] module provide shortcut operators are defined in [Mat] module. *)
+  module Open : sig
+    val (+:) : ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
+    val (-:) : ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
+    val ( *: ) : ('a s, 'b s, num_type) t -> ('b s, 'c s, num_type) t -> ('a s, 'c s, num_type) t
+  end
+
   val identity: 'a s -> ('a s, 'a s, num_type) t
   (* [identity size] get the identity matrix having [size] rows and [size] columns. *)
 
@@ -39,6 +46,14 @@ end
 module Vec : sig
   include Vector_intf.S with type num_type := num_type
 
+  (* [Open] module provide shortcut operators are defined in [Vec] module. *)
+  module Open : sig
+    val (+:) : ('a, num_type) t -> ('a, num_type) t -> ('a, num_type) t
+    val (-:) : ('a, num_type) t -> ('a, num_type) t -> ('a, num_type) t
+    val ( *: ) : ('a, num_type) t -> ('a, num_type) t -> num_type
+    val (/:) : ('a, num_type) t -> num_type -> ('a, num_type) t
+  end
+
   (* # Operations for Vector. *)
 
   val add : ('a, num_type) t -> ('a, num_type) t -> ('a, num_type) t
@@ -57,7 +72,7 @@ module Vec : sig
 
   val cross: left:(Size.three Size.t, num_type) t -> right:(Size.three Size.t, num_type) t
     -> (Size.three Size.t, num_type) t
-(** [cross ~left ~right] gets new vector is cross product via 2 vectors. *)
+  (** [cross ~left ~right] gets new vector is cross product via 2 vectors. *)
 
   val scalar: scale:num_type -> v:('s, num_type) t -> ('s, num_type) t
 (* [scaler ~scale ~v] multiply [scale] with each elements of [v]. *)
@@ -69,7 +84,7 @@ type +'s vec = ('s, num_type) Vec.t
 type 'a s = 'a Size.t
 
 val mul_v2m: 's s vec -> ('s s, 'b s) mat -> 'b s vec
-  (* [mul_v2m vec mat] multiply mat with vector. The [vec] is as "column" vector. *)
+(* [mul_v2m vec mat] multiply mat with vector. The [vec] is as "column" vector. *)
 
 val mul_m2v: ('b s, 's s) mat -> 's s vec -> 'b s vec
 (* [mul_m2v mat vec] multiply [vec] with [mat]. The [vec] is as "row" vector. *)

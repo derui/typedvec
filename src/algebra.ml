@@ -23,6 +23,13 @@ module Vec = struct
     v
 
   let scalar ~scale ~v  = V.map ~f:(fun v -> v *. scale) v
+
+  module Open = struct
+    let (+:) = add
+    let (-:) = sub
+    let ( *: ) = dot
+    let (/:) = div
+  end
 end
 
 module Mat = struct
@@ -112,6 +119,12 @@ module Mat = struct
     | Some det ->
        let adj = adjugate mat in
        Some (scalar ~scale:(1.0 /. det) ~m:adj)
+
+  module Open = struct
+    let (+:) = add
+    let (-:) = sub
+    let ( *: ) = mul
+  end
 end
 
 type (+'row, +'col) mat = ('row, 'col, num_type) Mat.t
