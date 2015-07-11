@@ -26,8 +26,13 @@ module Mat : sig
   val mul: ('a s, 'b s, num_type) t -> ('b s, 'c s, num_type) t -> ('a s, 'c s, num_type) t
   (* [mul a b] get result to multiply [a] with [b]. *)
 
-  val scalar: scale:float -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
-(* [scalar ~scale mat] get scalar multiple matrix. *)
+  val det: ('a s, 'a s, num_type)t -> num_type option
+  (* [det mat] get the determinant of the [mat] if it have. *)
+
+  val inverse: ('a s, 'a s, num_type) t -> ('a s, 'a s, num_type) t option
+(* [inverse mat] get the inverse matrix of [matrix]. If [matrix] not have the inverse matrix,
+   return None.
+   [mat] must be a square matrix.*)
 
 end
 

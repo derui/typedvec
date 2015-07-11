@@ -7,3 +7,12 @@ let range n =
     else let n' = pred n in range' n' (n' :: list)
   in
   if n < 0 then [] else range' n []
+
+(* [separate idx ary] get to take 0 to [idx] from [ary], and take [idx] + 1 to
+   length of [ary].*)
+let separate index ary =
+  let len = Array.length ary in
+  let index = max 0 index in
+  let tak = Array.sub ary 0 index
+  and lst = Array.sub ary (succ index) (len - (succ index)) in
+  (tak, lst)

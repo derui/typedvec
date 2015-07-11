@@ -40,7 +40,13 @@ module type S = sig
   val transpose: ('a Size.t, 'b Size.t, num_type) t -> ('b Size.t, 'a Size.t, num_type) t
 
   val map: f:(int -> int -> 'c -> 'd) -> ('a Size.t, 'b Size.t, 'c) t -> ('a Size.t, 'b Size.t, 'd) t
-(* [map ~f mat] apply [f] each element of the matrix. The [f] given row and column index and value at
-   the row and column in the matrix.*)
+  (* [map ~f mat] apply [f] each element of the matrix. The [f] given row and column index and value at
+     the row and column in the matrix.*)
+
+  val to_array: ('a, 'b, num_type) t -> num_type array array
+  (* [to_array mat] get the two dimensional array of matrix. *)
+
+  val to_list: ('a, 'b, num_type) t -> num_type list list
+(* [to_list mat] get the two dimensional list of matrix. *)
 
 end

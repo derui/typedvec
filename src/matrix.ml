@@ -72,4 +72,7 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
     if col < 0 || (col_size mat |> Size.to_int) < col then failwith "number of col must less than matrix"
     else Array.map (fun ary -> ary.(col)) mat.data |> Array.to_list
 
+  let to_array {data;_} = data
+  let to_list {data;_} = Array.map Array.to_list data |> Array.to_list
+
 end

@@ -39,6 +39,17 @@ let%spec "Mat.mul should return result of multply each matrixs" =
   let c = M.mul a b in
   M.get ~row:0 ~col:0 c [@eq Some (5.0)]
 
+let%spec "Multiply identity with some matrix must equals original it" =
+  let id = M.identity S.two in
+  let mat = M.make ~row:S.two ~col:S.two ~init:10.0 in
+  let mat = M.mul id mat in
+  (M.row_of_mat ~row:0 mat) [@eq [10.0;10.0]];
+  (M.row_of_mat ~row:1 mat) [@eq [10.0;10.0]];
+
+  let mat = M.mul mat id in
+  (M.row_of_mat ~row:0 mat) [@eq [10.0;10.0]];
+  (M.row_of_mat ~row:1 mat) [@eq [10.0;10.0]]
+
 let%spec "Mat.identity should return identity matrix with size" =
   let matrix = M.identity S.two in
   M.get ~row:0 ~col:0 matrix [@eq Some (1.0)];
@@ -78,3 +89,14 @@ let%spec "Mat.sub should return result to subtract two matrix" =
   M.get ~row:0 ~col:1 c [@eq Some (-1.0)];
   M.get ~row:1 ~col:0 c [@eq Some (-1.0)];
   M.get ~row:1 ~col:1 c [@eq Some (1.0)]
+
+let%spec "Mat.inverse should return invserse matrix if it have inverse matrix" =
+  let a = M.make ~row:S.two ~col:S.two ~init:0.0 in
+  M.set ~row:0 ~col:0 ~v:2.0 a;
+  M.set ~row:0 ~col:1 ~v:5.0 a;
+  M.set ~row:1 ~col:0 ~v:1.0 a;
+  M.set ~row:1 ~col:1 ~v:3.0 a;
+  let inv = M.inverse a in
+  M.to_list inv [@eq [[3.0;-5.0];
+                      [-1.0;2.0]]
+                ]
