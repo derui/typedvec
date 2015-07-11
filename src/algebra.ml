@@ -21,6 +21,8 @@ module Vec = struct
     V.set v 1 ((g left 2) *. (g right 0) -. (g left 0) *. (g right 2));
     V.set v 2 ((g left 0) *. (g right 1) -. (g left 1) *. (g right 0));
     v
+
+  let scalar ~scale ~v  = V.map ~f:(fun v -> v *. scale) v
 end
 
 module Mat = struct

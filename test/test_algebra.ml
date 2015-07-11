@@ -28,6 +28,10 @@ let%spec "Vec.dot should return result of dot product" =
   and b = V.init S.three (fun i -> (float_of_int i)  *. 3.0) in
   V.dot a b [@eq 30.0]
 
+let%spec "Vec.scaler should return result of multiply scalar" =
+  let v = V.init S.three (fun i -> (float_of_int i) *. 1.0) in
+  (V.scalar ~scale:2.0 ~v |> V.to_list) [@eq [0.0;2.0;4.0]]
+
 (* For Matrix *)
 let%spec "Mat.mul should return result of multply each matrixs" =
   let a = M.make ~col:S.two ~row:S.one ~init:0.0

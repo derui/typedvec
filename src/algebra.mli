@@ -58,6 +58,9 @@ module Vec : sig
   val cross: left:(Size.three Size.t, num_type) t -> right:(Size.three Size.t, num_type) t
     -> (Size.three Size.t, num_type) t
 (** [cross ~left ~right] gets new vector is cross product via 2 vectors. *)
+
+  val scalar: scale:num_type -> v:('s, num_type) t -> ('s, num_type) t
+(* [scaler ~scale ~v] multiply [scale] with each elements of [v]. *)
 end
 
 type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t

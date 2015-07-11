@@ -75,4 +75,6 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
   let to_array {data;_} = data
   let to_list {data;_} = Array.map Array.to_list data |> Array.to_list
 
+  let copy mat = {mat with data = to_array mat}
+
 end

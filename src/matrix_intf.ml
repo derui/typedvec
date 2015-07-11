@@ -47,6 +47,9 @@ module type S = sig
   (* [to_array mat] get the two dimensional array of matrix. *)
 
   val to_list: ('a, 'b, num_type) t -> num_type list list
-(* [to_list mat] get the two dimensional list of matrix. *)
+  (* [to_list mat] get the two dimensional list of matrix. *)
+
+  val copy: ('a, 'b, num_type) t -> ('a, 'b, num_type) t
+(* [copy mat] get the new matrix to be copied from [mat] *)
 
 end
