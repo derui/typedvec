@@ -6,7 +6,7 @@ end
 
 module type S = sig
 
-  type (+'row, 'col, 'd) t
+  type (+'row, +'col, 'd) t
   type num_type
 
   (** Make a matrix having specified rows and columns. *)

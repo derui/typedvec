@@ -63,7 +63,13 @@ module Vec : sig
 (* [scaler ~scale ~v] multiply [scale] with each elements of [v]. *)
 end
 
-type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t
+type (+'row, +'col) mat = ('row, 'col, num_type) Mat.t
 
 type +'s vec = ('s, num_type) Vec.t
+type 'a s = 'a Size.t
 
+val mul_v2m: 's s vec -> ('s s, 'b s) mat -> 'b s vec
+  (* [mul_v2m vec mat] multiply mat with vector. The [vec] is as "column" vector. *)
+
+val mul_m2v: ('b s, 's s) mat -> 's s vec -> 'b s vec
+(* [mul_m2v mat vec] multiply [vec] with [mat]. The [vec] is as "row" vector. *)

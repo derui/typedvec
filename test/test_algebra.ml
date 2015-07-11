@@ -121,3 +121,16 @@ let%spec "Mat.det should return determinant of matrix" =
   M.set ~row:2 ~col:2 ~v:(-4.0) a;
   let det = M.det a in
   det [@eq Some (-7.0)]
+
+
+let%spec "mul_v2m should return multiply matrix with vector" =
+  let m = M.make ~row:S.two ~col:S.two ~init:1.0 in
+  let v = V.make S.two 2.0 in
+  let v' = A.mul_v2m v m in
+  (V.to_list v') [@eq [4.0;4.0]]
+
+let%spec "mul_m2v should return multiply vector with matrix" =
+  let m = M.init ~row:S.two ~col:S.two ~f:(fun r _ -> (float_of_int r) +. 1.0) in
+  let v = V.make S.two 2.0 in
+  let v' = A.mul_m2v m v in
+  (V.to_list v') [@eq [4.0;8.0]]

@@ -114,6 +114,34 @@ module Mat = struct
        Some (scalar ~scale:(1.0 /. det) ~m:adj)
 end
 
-type (+'row, 'col) mat = ('row, 'col, num_type) Mat.t
+type (+'row, +'col) mat = ('row, 'col, num_type) Mat.t
 
 type +'s vec = ('s, num_type) Vec.t
+type 'a s = 'a Size.t
+
+let list_to_vec l s =
+  let vec = Vec.make s 0.0 in
+  List.iteri (fun idx v -> Vec.set vec idx v) l;
+  vec
+
+let mul_v2m v m =
+  let size = Mat.col_size m in
+  let row_size = Mat.row_size m in
+  let v' = Vec.make size 0.0 in
+  let col_range = Mat.col_size m |> Size.to_int |> Util.range in
+  List.iter (fun col ->
+    let cols = list_to_vec (Mat.col_of_mat ~col m) row_size in
+    Vec.set v' col (Vec.dot v cols);
+  ) col_range;
+  v'
+
+let mul_m2v m v =
+  let size = Mat.row_size m in
+  let col_size = Mat.col_size m in
+  let v' = Vec.make size 0.0 in
+  let row_range = Mat.row_size m |> Size.to_int |> Util.range in
+  List.iter (fun row ->
+    let rows = list_to_vec (Mat.row_of_mat ~row m) col_size in
+    Vec.set v' row (Vec.dot v rows);
+  ) row_range;
+  v'
