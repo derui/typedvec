@@ -22,7 +22,9 @@ module Mat : sig
 
   val diagonal: size:'a s -> comp:num_type -> ('a s, 'a s, num_type) t
   (* [diagonal ~size ~comp] get the diagonal matrix having [size] rows and columns, and each component
-     is [comp]. *)
+     is [comp].
+     The diagonal matrix can make with functions defined as [scalar] and [identity] in this module.
+  *)
 
   val add: ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t -> ('a s, 'b s, num_type) t
   (* [add a b] get result to add [b] to [a]. *)
@@ -79,12 +81,24 @@ module Vec : sig
 end
 
 type (+'row, +'col) mat = ('row, 'col, num_type) Mat.t
+(* The type of matrix using in this module. *)
 
 type +'s vec = ('s, num_type) Vec.t
+(* The type of vector using in this module. *)
+
 type 'a s = 'a Size.t
+
+(* This module provides shortcut operators for oerations to multiply matrix and vector. *)
+module Open : sig
+  val ( *> ): 's s vec -> ('s s, 'b s) mat -> 'b s vec
+  val ( *< ): ('b s, 's s) mat -> 's s vec -> 'b s vec
+end
 
 val mul_v2m: 's s vec -> ('s s, 'b s) mat -> 'b s vec
 (* [mul_v2m vec mat] multiply mat with vector. The [vec] is as "column" vector. *)
 
 val mul_m2v: ('b s, 's s) mat -> 's s vec -> 'b s vec
 (* [mul_m2v mat vec] multiply [vec] with [mat]. The [vec] is as "row" vector. *)
+
+val jacobi: ?epsilon:num_type -> coefficient:('a s, 'a s) mat -> const:'a s vec -> unit -> 'a s vec
+(* [jacobi ~coefficient ~const] get the value of unknown quantity in an equation using with Jacobi. *)

@@ -18,10 +18,10 @@ module type S = sig
   val size : ('a, num_type) t -> 'a
 
   (* Get element of the vector at specified index that is 0 origin. *)
-  val get : ('a, num_type) t -> int -> num_type option
+  val get : ('a, num_type) t -> index:int -> num_type option
 
   (* Set element to the vector at specified index that is 0 origin. *)
-  val set : ('a, num_type) t -> int -> num_type -> unit
+  val set : ('a, num_type) t -> index:int -> v:num_type -> unit
 
   (* Get element of the vector at specified index, this do not check boundary of the array *)
   val unsafe_get : ('a, num_type) t -> int -> num_type

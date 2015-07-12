@@ -21,8 +21,8 @@ module Make(T:TYPE) : S with type num_type := T.num_type = struct
 
   let unsafe_get v i = v.data.(i)
   let unsafe_set v i newv = v.data.(i) <- newv
-  let get v i = if i < 0 || i >= Array.length v.data then None else Some (unsafe_get v i)
-  let set v i newv = if i < 0 || i >= Array.length v.data then () else
+  let get v ~index:i = if i < 0 || i >= Array.length v.data then None else Some (unsafe_get v i)
+  let set v ~index:i ~v:newv = if i < 0 || i >= Array.length v.data then () else
       unsafe_set v i newv
 
   let to_list {data;_} = Array.to_list data

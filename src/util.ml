@@ -16,3 +16,7 @@ let separate index ary =
   let tak = Array.sub ary 0 index
   and lst = Array.sub ary (succ index) (len - (succ index)) in
   (tak, lst)
+
+let some = function
+  | None -> failwith "[some] is able to apply only Some."
+  | Some s -> s

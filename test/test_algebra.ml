@@ -134,3 +134,18 @@ let%spec "mul_m2v should return multiply vector with matrix" =
   let v = V.make S.two 2.0 in
   let v' = A.mul_m2v m v in
   (V.to_list v') [@eq [4.0;8.0]]
+
+let%spec "jacobi should get the values of unknown quantity" =
+  let m = M.make ~row:S.two ~col:S.two ~init:0.0 in
+  M.set m ~row:0 ~col:0 ~v:2.0;
+  M.set m ~row:0 ~col:1 ~v:1.0;
+  M.set m ~row:1 ~col:0 ~v:1.0;
+  M.set m ~row:1 ~col:1 ~v:5.0;
+  let v = V.make S.two 0.0 in
+  V.set v ~index:0 ~v:4.0;
+  V.set v ~index:1 ~v:11.0;
+  let ret = A.jacobi ~coefficient:m ~const:v () in
+  let ret = V.to_list ret in
+  List.nth ret 0 [@eq 1.0];
+  let r = List.nth ret 1 in
+  (r >= 1.99999 && r <= 2.0) [@true]
