@@ -72,6 +72,14 @@ module Vec : sig
      one from [a]
   *)
 
+  val norm_sqrt: ('a, num_type) t -> num_type
+  (* [norm_sqrt v] get the norm of the [v]. *)
+
+  val norm: ('a, num_type) t -> num_type
+  (* [norm v] get the norm of the [v]. The difference from [norm_sqrt] is
+     not apply square-root of a norm of [v].
+  *)
+
   val cross: left:(Size.three Size.t, num_type) t -> right:(Size.three Size.t, num_type) t
     -> (Size.three Size.t, num_type) t
   (** [cross ~left ~right] gets new vector is cross product via 2 vectors. *)
@@ -100,5 +108,7 @@ val mul_v2m: 's s vec -> ('s s, 'b s) mat -> 'b s vec
 val mul_m2v: ('b s, 's s) mat -> 's s vec -> 'b s vec
 (* [mul_m2v mat vec] multiply [vec] with [mat]. The [vec] is as "row" vector. *)
 
+(* # Solutions *)
+
 val jacobi: ?epsilon:num_type -> coefficient:('a s, 'a s) mat -> const:'a s vec -> unit -> 'a s vec
-(* [jacobi ~coefficient ~const] get the value of unknown quantity in an equation using with Jacobi. *)
+(* [jacobi ~coefficient ~const] get the value of unknown quantity in an equation using with Jacobi method. *)

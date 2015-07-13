@@ -32,6 +32,11 @@ let%spec "Vec.scaler should return result of multiply scalar" =
   let v = V.init S.three (fun i -> (float_of_int i) *. 1.0) in
   (V.scalar ~scale:2.0 ~v |> V.to_list) [@eq [0.0;2.0;4.0]]
 
+let%spec "Vec.norm should return norm of the vector" =
+  let v = V.init S.three (fun i -> (float_of_int i) +. 1.0) in
+  (V.norm_sqrt v) [@eq sqrt 14.0];
+  (V.norm v) [@eq 14.0]
+
 (* For Matrix *)
 let%spec "Mat.mul should return result of multply each matrixs" =
   let a = M.make ~col:S.two ~row:S.one ~init:0.0

@@ -104,6 +104,6 @@ FILES[]=
 
 MyOCamlPackage($(LIB), $(FILES), $(EMPTY), -linkall, true)
 
-all: $(LIB).cma $(LIB).cmxa
+all: $(LIB).cmxa
 
 .DEFAULT: all
