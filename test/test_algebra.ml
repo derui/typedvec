@@ -37,6 +37,11 @@ let%spec "Vec.norm should return norm of the vector" =
   (V.norm_sqrt v) [@eq sqrt 14.0];
   (V.norm v) [@eq 14.0]
 
+let%spec "Vec.normalize should return normalized vector" =
+  let v = V.init S.two (fun i -> 1.0) in
+  let l = 1.0 /. (sqrt 2.0) in
+  (V.normalize v |> V.to_list) [@eq [l;l]]
+
 (* For Matrix *)
 let%spec "Mat.mul should return result of multply each matrixs" =
   let a = M.make ~col:S.two ~row:S.one ~init:0.0

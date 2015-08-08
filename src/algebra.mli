@@ -72,6 +72,9 @@ module Vec : sig
      one from [a]
   *)
 
+  val normalize: ('a, num_type) t -> ('a, num_type) t
+  (* [normalize v] get the normalized [v]. *)
+
   val norm_sqrt: ('a, num_type) t -> num_type
   (* [norm_sqrt v] get the norm of the [v]. *)
 
@@ -86,6 +89,9 @@ module Vec : sig
 
   val scalar: scale:num_type -> v:('s, num_type) t -> ('s, num_type) t
 (* [scaler ~scale ~v] multiply [scale] with each elements of [v]. *)
+
+  val inverse: ('s, num_type) t -> ('s, num_type) t
+(* [inverse v] get the vertex inverted. This function is equals to call [scalar ~scale:-1.0 ~v]. *)
 end
 
 type (+'row, +'col) mat = ('row, 'col, num_type) Mat.t

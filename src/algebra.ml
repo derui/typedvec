@@ -29,6 +29,8 @@ module Vec = struct
     List.fold_left (fun s v -> s +. v *. v) 0.0 v
 
   let norm_sqrt v = norm v |> sqrt
+  let normalize v = let norm = norm_sqrt v in V.map ~f:(fun e -> e /. norm) v
+  let inverse v = scalar ~scale:(-1.0) ~v
 
   module Open = struct
     let (+:) = add
