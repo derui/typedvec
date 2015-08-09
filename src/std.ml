@@ -1,4 +1,5 @@
 
+module Ext = Ext
 module Size = Size
 module Vec = Vector
 module Mat = Matrix

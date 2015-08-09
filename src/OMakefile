@@ -53,7 +53,7 @@ if $(not $(OCAMLFIND_EXISTS))
 #
 # Include path
 #
-OCAMLINCLUDES += 
+OCAMLINCLUDES +=
 
 #
 # Compile native or byte code?
@@ -62,16 +62,15 @@ OCAMLINCLUDES +=
 #
 NATIVE_ENABLED = $(OCAMLOPT_EXISTS)
 BYTE_ENABLED = true
-
 #
 # Various options
 #
 OCAMLFLAGS    += -g
 OCAMLCFLAGS   +=
 OCAMLOPTFLAGS +=
-# OCAML_LINK_FLAGS +=
-# OCAML_BYTE_LINK_FLAGS +=
-# OCAML_NATIVE_LINK_FLAGS +=
+OCAML_LINK_FLAGS += -linkall
+OCAML_BYTE_LINK_FLAGS += -linkall
+OCAML_NATIVE_LINK_FLAGS += -linkall
 
 ################################################
 # Generated files
@@ -100,6 +99,8 @@ FILES[]=
 	matrix_intf
 	matrix
 	algebra
+	ext_quaternion
+	ext
 	std
 
 MyOCamlPackage($(LIB), $(FILES), $(EMPTY), -linkall, true)
