@@ -72,6 +72,9 @@ module Vec : sig
      one from [a]
   *)
 
+  val zero: 'a Size.t -> ('a Size.t, num_type) t
+  (* [zero] get the zero vector specified size. *)
+
   val normalize: ('a, num_type) t -> ('a, num_type) t
   (* [normalize v] get the normalized [v]. *)
 

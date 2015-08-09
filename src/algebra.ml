@@ -23,6 +23,7 @@ module Vec = struct
     v
 
   let scalar ~scale ~v  = V.map ~f:(fun v -> v *. scale) v
+  let zero size = V.make size 0.0
 
   let norm v =
     let v = V.to_list v in

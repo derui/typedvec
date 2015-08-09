@@ -17,6 +17,10 @@ let%spec "Vec.add should return added v1 to v2" =
   let c = V.add a b in
   V.to_list c [@eq [5.0;5.0;5.0]]
 
+let%spec "Vec.zero should return zero vector" =
+  let a = V.zero S.three in
+  V.to_list a [@eq [0.0;0.0;0.0]]
+
 let%spec "Vec.sub should return subtracted v2 from v1" =
   let a = V.init S.three (fun i -> (float_of_int i) *. 2.0)
   and b = V.init S.three (fun i -> (float_of_int i)  *. 3.0) in
