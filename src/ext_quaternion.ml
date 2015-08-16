@@ -1,4 +1,6 @@
 module A = Algebra
+module Vec = Algebra_vec
+module Mat = Algebra_mat
 
 (* This type of an axis of the Quaternion. Also known imaginaly number. *)
 type axis = Size.three A.s A.vec
@@ -16,25 +18,25 @@ let pi = 3.1415926535897232
 
 let epsilon = 0.00001
 
-let identity = {quat_axis = A.Vec.make Size.three 0.0; quat_angle = 1.0}
+let identity = {quat_axis = Vec.make Size.three 0.0; quat_angle = 1.0}
 
 let make ~angle ~axis () =
   let angle = angle /. 2.0 in
   let radian = pi /. 180.0 *. angle in
   let base_sin = sin radian  in
-  let normal = A.Vec.normalize axis in
+  let normal = Vec.normalize axis in
   {quat_angle = cos radian;
-   quat_axis = A.Vec.scalar ~v:normal ~scale:base_sin
+   quat_axis = Vec.scalar ~v:normal ~scale:base_sin
   }
 
 let norm {quat_axis = axis;quat_angle = angle} =
-  let module V = Algebra.Vec in
+  let module V = Vec in
   let presquare = angle *. angle +. (V.norm_sqrt axis) in
   sqrt presquare
 
 let normalize quat =
   let normed = norm quat in
-  let module V = Algebra.Vec in
+  let module V = Vec in
   (* norm should be over 0.0 *)
   if normed > 0.0 then
     let mangle = 1.0 /. normed in
@@ -45,13 +47,13 @@ let normalize quat =
     identity
 
 let extract_vec v = 
-  let module V = Algebra.Vec in
+  let module V = Vec in
   match (V.get ~index:0 v, V.get ~index:1 v, V.get ~index:2 v) with
   | (Some(x), Some(y), Some(z)) -> (x,y,z)
   | _ -> failwith "Quaternion axis must have size three."
 
 let multiply first second =
-  let module V = Algebra.Vec in
+  let module V = Vec in
   let w1 = first.quat_angle
   and (x1, y1, z1) = extract_vec first.quat_axis
   and w2 = second.quat_angle
@@ -73,8 +75,8 @@ end = struct
 end
 
 let to_mat quat =
-  let module V = Algebra.Vec in
-  let module M = Algebra.Mat in
+  let module V = Vec in
+  let module M = Mat in
   let module S = Size in
   let w = quat.quat_angle
   and (x, y, z) = extract_vec quat.quat_axis in
@@ -109,7 +111,7 @@ let dot q1 q2 =
    (-q1, q2). q2 is without change always.
 *)
 let minimum_angle q1 q2 =
-  let module V = Algebra.Vec in
+  let module V = Vec in
   let dotted = dot q1 q2 in
   if dotted < 0.0 then
     ({quat_angle = -.dotted; quat_axis = V.scalar ~v:q1.quat_axis ~scale:(-1.0)}, q2)
@@ -139,7 +141,7 @@ let slerp ~from_quat ~to_quat ~freq () =
   and (x0,y0,z0) = extract_vec from_quat.quat_axis
   and w1 = to_quat.quat_angle
   and (x1,y1,z1) = extract_vec to_quat.quat_axis in
-  let module V = A.Vec in
+  let module V = Vec in
   {quat_angle = w0 *. k0 +. w1 *. k1;
    quat_axis = let v = V.copy from_quat.quat_axis in
                V.set ~index:0 ~v:(x0 *. k0 +. x1 *. k1) v;
@@ -162,4 +164,4 @@ let axis {quat_axis;quat_angle} =
     identity.quat_axis
   else
     let over_sin = 1.0 /. sqrt sin_theta_sq in
-    A.Vec.scalar ~v:quat_axis ~scale:over_sin
+    Vec.scalar ~v:quat_axis ~scale:over_sin

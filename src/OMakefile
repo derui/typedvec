@@ -65,7 +65,7 @@ BYTE_ENABLED = true
 #
 # Various options
 #
-OCAMLFLAGS    += -g
+OCAMLFLAGS    += -g -bin-annot
 OCAMLCFLAGS   +=
 OCAMLOPTFLAGS +=
 OCAML_LINK_FLAGS += -linkall
@@ -98,7 +98,11 @@ FILES[]=
 	vector
 	matrix_intf
 	matrix
+	algebra_types
 	algebra
+	algebra_vec
+	algebra_mat
+	algebra_line
 	ext_quaternion
 	ext
 	std
