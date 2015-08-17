@@ -1,14 +1,6 @@
 (* The Algebraic module via float. *)
 type num_type = float
 
-module Vec : sig
-  include module type of Algebra_vec
-end
-
-module Mat : sig
-  include module type of Algebra_mat
-end
-
 type (+'row, +'col) mat = ('row, 'col, num_type) Algebra_mat.t
 (* The type of matrix using in this module. *)
 
