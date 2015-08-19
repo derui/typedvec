@@ -7,7 +7,7 @@ type +'s p = 's Algebra.vec
 type +'s t = 's p * 's p
 (** The type of segment. Constructed start and end of the segment. *)
 
-val detect_collision: ?epsilon:Algebra_types.num_type -> a:'s t -> b:'s t -> 's p option
+val detect_collision: ?epsilon:Algebra_types.num_type -> a:'s t -> b:'s t -> unit -> 's t option
 (* [detect_collision ~a ~b] get the result of detection to be collided [a] and [b].
    If not collide [a] and [b], get [None] caller.
 *)
