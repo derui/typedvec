@@ -4,7 +4,9 @@ module V = Algebra_vec
 type +'s p = 's A.vec
 type +'s t = 's p * 's p
 
-let detect_collision ?(epsilon = 0.00001) ~a ~b () =
+type 's detect_type = Collide of 's t | Nearest of 's t | Parallel
+
+let nearest_point ?(epsilon = 0.00001) ~a ~b () =
   let open V.Open in
   let a' = (snd a) -: (fst a)
   and b' = (snd b) -: (fst b) in
@@ -16,7 +18,7 @@ let detect_collision ?(epsilon = 0.00001) ~a ~b () =
   let para_work = 1.0 -. (angle_norm *. angle_norm) in
   (* パラメトリックの値を取得するためのヘルパーベクトル *)
   match para_work = 0.0 with
-  | true -> None
+  | true -> Parallel
   | false -> begin
     let para_v = (fst b) -: (fst a) in
     (* aにおけるパラメトリックの値 *)
@@ -27,5 +29,10 @@ let detect_collision ?(epsilon = 0.00001) ~a ~b () =
     and para_b' = V.scalar ~scale:para_b ~v:nb' in
     let p_a = (fst a) +: para_a'
     and p_b = (fst b) +: para_b' in
-    if V.norm (p_a -: p_b) < epsilon then Some(p_a, p_b) else None
+    if V.norm (p_a -: p_b) < epsilon then Collide(p_a, p_b) else Nearest(p_a, p_b)
   end
+
+let detect_collision ?(epsilon = 0.00001) ~a ~b () =
+  match nearest_point ~epsilon ~a ~b () with
+  | Collide p -> Some p
+  | _ -> None
