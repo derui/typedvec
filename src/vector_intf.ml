@@ -1,6 +1,8 @@
 module type TYPE = sig
   type num_type
 (* num_type is the type of element of vector. *)
+    val compare: num_type -> num_type -> int
+(* [compare v1 v2] get the greater or less, or equals between [v1] and [v2].  *)
 end
 
 module type S = sig
@@ -57,4 +59,7 @@ module type S = sig
 
   (* [copy ?y v] copy [v] to [y] or new vector which new allocate in copy. *)
   val copy: ?y:('a, num_type) t -> ('a, num_type) t -> ('a, num_type) t
+
+  val equals: ('a, num_type) t -> ('a, num_type) t -> bool
+(* [equals v1 v2] get the result if equals between [v1] and [v2]. *)
 end

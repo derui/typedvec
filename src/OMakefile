@@ -9,6 +9,7 @@ INSTALLED = $(BIG_ROOT)/installed
 USE_OCAMLFIND = true
 #
 OCAMLPACKS[] =
+    core
 #
 if $(not $(OCAMLFIND_EXISTS))
     eprintln(This project requires ocamlfind, but is was not found.)
@@ -30,7 +31,7 @@ BYTE_ENABLED = true
 #
 # Various options
 #
-OCAMLFLAGS    += -g -bin-annot
+OCAMLFLAGS    += -g -bin-annot -thread
 OCAMLCFLAGS   +=
 OCAMLOPTFLAGS +=
 OCAML_LINK_FLAGS += -linkall

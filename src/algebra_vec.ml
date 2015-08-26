@@ -1,9 +1,11 @@
+open Core.Std
 module S = Size
 type num_type' = float
 type num_type = num_type'
 
 module V = Vector.Make(struct
   type num_type = num_type'
+  let compare = Float.compare
 end)
 
 include V
@@ -26,7 +28,7 @@ let zero size = V.make size 0.0
 
 let norm v =
   let v = V.to_list v in
-  List.fold_left (fun s v -> s +. v *. v) 0.0 v
+  List.fold_left ~init:0.0 ~f:(fun s v -> s +. v *. v) v
 
 let norm_sqrt v = norm v |> sqrt
 let normalize v = let norm = norm_sqrt v in V.map ~f:(fun e -> e /. norm) v

@@ -2,7 +2,8 @@ module Std = Typedvec.Std
 module S = Std.Size
 module V = Std.Vec.Make(struct
   type num_type = int
-    end)
+  let compare = Pervasives.compare
+end)
 
 let%spec "Make array from size" =
   let v = V.make S.two 0 in
@@ -80,6 +81,7 @@ let%spec "Vec can be contained member in the vector" =
   V.mem ~member:0 v [@false];
   let module V = Std.Vec.Make(struct
     type num_type = int list
+    let compare = Pervasives.compare
   end) in
   let v = V.init S.four (fun i -> [i]) in
   V.memq ~member:[1] v [@false]
@@ -113,3 +115,13 @@ let %spec "Vec can copy to already allocated vector" =
   and v2 = V.make S.three (-1) in
   V.copy ~y:v2 v |> ignore;
   V.to_list v2 [@eq [1;2;3]]
+
+let%spec "Vec can detect equality vectors" =
+  let v = V.init S.three (fun i -> succ i)
+  and v2 = V.init S.three (fun i -> succ i)
+  and v3 = V.make S.three 1 in
+
+  V.equals v v2 [@true];
+  V.equals v2 v [@true];
+  V.equals v v3 [@false];
+  V.equals v2 v3 [@false]

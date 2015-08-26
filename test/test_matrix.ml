@@ -2,6 +2,7 @@ module Std = Typedvec.Std
 module S = Std.Size
 module T = struct
   type num_type = float
+  let compare = Pervasives.compare
 end
 module V = Std.Vec.Make(T)
 module M = Std.Mat.Make(T)
