@@ -1,7 +1,14 @@
 name = "typedvec"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 
-requires = ""
+requires = "core"
 archive(byte) = "typedvec.cma"
 archive(native) = "typedvec.cmxa"
+
+package "ppx" (
+  version = "0.2.0"
+  description = "Typedvec direct generation using concrete syntax"
+  requires = "ppx_tools,typedvec"
+  ppx = "./ppx_typedvec"
+)

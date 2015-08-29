@@ -3,15 +3,14 @@ open MyOCaml
 
 .PHONY: clean all
 
-.SUBDIRS: ppx
-
 # mark file confined directory path.
 INSTALLED = $(BIG_ROOT)/installed
 
 USE_OCAMLFIND = true
 #
 OCAMLPACKS[] =
-    core
+    compiler-libs.common
+    ppx_tools.metaquot
 #
 if $(not $(OCAMLFIND_EXISTS))
     eprintln(This project requires ocamlfind, but is was not found.)
@@ -21,7 +20,7 @@ if $(not $(OCAMLFIND_EXISTS))
 #
 # Include path
 #
-OCAMLINCLUDES +=
+OCAMLINCLUDES += ..
 
 #
 # Compile native or byte code?
@@ -33,7 +32,7 @@ BYTE_ENABLED = true
 #
 # Various options
 #
-OCAMLFLAGS    += -g -bin-annot -thread
+OCAMLFLAGS    += -bin-annot -thread
 OCAMLCFLAGS   +=
 OCAMLOPTFLAGS +=
 OCAML_LINK_FLAGS += -linkall
@@ -45,17 +44,12 @@ OCAML_NATIVE_LINK_FLAGS += -linkall
 # OCAML_OTHER_LIBS += nums
 # OCAML_LIB_FLAGS +=
 #
-LIB = typedvec
+LIB = ppx_typedvec
 
 FILES[]=$(removesuffix .ml, $(ls *.ml))
 
-MyOCamlPackageExtras[] =
-    ppx/ppx_typedvec$(EXE)
-    ppx/ppx_typedvec.run
-    ppx/ppx_typedvec.opt
+OCamlProgram($(LIB), $(FILES))
 
-MyOCamlPackage($(LIB), $(FILES), $(EMPTY), -linkall, true)
-
-all: $(LIB).cmxa
+all: $(LIB)$(EXE)
 
 .DEFAULT: all

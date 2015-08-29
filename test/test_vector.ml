@@ -110,7 +110,7 @@ let%spec "Vec can copy to new allocated vector" =
   let v = V.init S.three (fun i -> succ i) in
   (V.copy v |> V.to_list) [@eq [1;2;3]]
 
-let %spec "Vec can copy to already allocated vector" =
+let%spec "Vec can copy to already allocated vector" =
   let v = V.init S.three (fun i -> succ i)
   and v2 = V.make S.three (-1) in
   V.copy ~y:v2 v |> ignore;

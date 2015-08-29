@@ -57,6 +57,10 @@ if $(not $(OCAMLFIND_EXISTS))
 #
 OCAMLINCLUDES += ../src
 
+PPX=$(file ../src/ppx/ppx_typedvec)
+OCAMLDEPFLAGS = -ppx "$(PPX)"
+OCAMLPPFLAGS = -ppx "$(PPX)"
+
 #
 # Compile native or byte code?
 #
