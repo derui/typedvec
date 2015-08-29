@@ -1,4 +1,3 @@
-open Core.Std
 open Ast_helper
 open Ast_mapper
 open Asttypes
@@ -15,35 +14,20 @@ let () =
       Some (error ~loc message)
     | _ -> None)
 
-let attribute_to_vec ~loc = function
-  | PStr [{pstr_desc = Pstr_eval (e, _);_}] -> begin
-    match e with
-    | {pexp_desc = Pexp_construct ({txt = Lident "::";_}, Some ({pexp_desc = Pexp_tuple list;_}));_} -> begin
-      failwith (Printf.sprintf "%d^n" (List.length list))
-    end
-    | _ -> failwith (Printf.sprintf "@vec have to be contained list as vector.")
-  end
-  | _ -> failwith (Printf.sprintf "@vec have to be contained list as vector.")
-
-let attribute_to_mat ~loc = function
-  | PStr [{pstr_desc = Pstr_eval (e, _);_}] -> begin
-    match e with
-    | {pexp_desc = Pexp_construct ({txt = Lident "::";_}, Some ({pexp_desc = Pexp_tuple list;_}));_} -> begin
-      failwith (Printf.sprintf "%d^n" (List.length list))
-    end
-    | _ -> failwith (Printf.sprintf "@vec have to be contained list as vector.")
-  end
-  | _ -> failwith (Printf.sprintf "@vec have to be contained list as vector.")
-
-
+(* Expand [%vec] extension to an expression what make vector. *)
 let expand_vec ~loc = function
   | PStr [{pstr_desc = Pstr_eval (e,_);_}] -> begin
     match e with
     | {pexp_desc = Pexp_construct ({txt = Lident "::";_}, _);_} ->
+       let list = Ast_util.tup_to_list e in
+       let tupled_list = Ast_util.list list in
+       let hd = List.hd list in
+       let len = Exp.constant (Const_int (List.length list)) in
        Some [%expr
-             let list = Ast_util.tup_to_list e in
-             let module S = (val Size.of_int (List.length list)) in
-             Vec.make S.size (List.hd_exn list)
+             let module S = (val Typedvec.Std.Size.of_int [%e len]) in
+                 let v = Typedvec.Std.Vec.make S.size [%e hd] in
+                 List.iteri (fun index v -> Typedvec.Std.Vec.set v ~index ~v) [%e tupled_list];
+                 v
             ]
     | {pexp_desc = Pexp_construct ({txt = Lident "[]";_},_);_} ->
        failwith "%vec have to apply a list is contained least one element"
@@ -53,7 +37,7 @@ let expand_vec ~loc = function
 
 (* Convert attributes to program to generate to make vector or matrix. *)
 let convert_extensions ~loc vbs =
-  List.fold vbs ~f:(fun memo vb ->
+  List.fold_left (fun memo vb ->
     match vb with
     | {pvb_expr = {pexp_desc = Pexp_extension ({txt="vec";loc}, payload);_};_} -> begin
       match expand_vec ~loc payload with
@@ -61,7 +45,7 @@ let convert_extensions ~loc vbs =
       | None -> memo
     end
     | _ -> memo
-  ) ~init:[] |> List.rev
+  ) [] vbs |> List.rev
 
 (* Mapper to reconstruct for assertions that are change to some assertion method *)
 let rec assertion_mapper argv = {default_mapper with
@@ -69,7 +53,6 @@ let rec assertion_mapper argv = {default_mapper with
     match expr with
     | {pexp_desc = Pexp_let (rec_flag, vbs, e);pexp_loc = loc;pexp_attributes = attrs} ->
        let expanded = convert_extensions ~loc vbs in
-       Printf.printf "foobar";
        Exp.let_ ~loc ~attrs rec_flag expanded e
     | _ -> default_mapper.expr mapper expr
 }

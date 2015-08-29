@@ -9,7 +9,6 @@ INSTALLED = $(BIG_ROOT)/installed
 USE_OCAMLFIND = true
 #
 OCAMLPACKS[] =
-    core
     compiler-libs.common
     ppx_tools.metaquot
 #
