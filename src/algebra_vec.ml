@@ -23,7 +23,7 @@ let cross ~left ~right =
   V.set v 2 ((g left 0) *. (g right 1) -. (g left 1) *. (g right 0));
   v
 
-let scalar ~scale ~v  = V.map ~f:(fun v -> v *. scale) v
+let scalar ~scale v  = V.map ~f:(fun v -> v *. scale) v
 let zero size = V.make size 0.0
 
 let norm v =
@@ -32,7 +32,7 @@ let norm v =
 
 let norm_sqrt v = norm v |> sqrt
 let normalize v = let norm = norm_sqrt v in V.map ~f:(fun e -> e /. norm) v
-let inverse v = scalar ~scale:(-1.0) ~v
+let inverse v = scalar ~scale:(-1.0) v
 
 module Open = struct
   let (+:) = add

@@ -34,7 +34,7 @@ let%spec "Vec.dot should return result of dot product" =
 
 let%spec "Vec.scaler should return result of multiply scalar" =
   let v = V.init S.three (fun i -> (float_of_int i) *. 1.0) in
-  (V.scalar ~scale:2.0 ~v |> V.to_list) [@eq [0.0;2.0;4.0]]
+  (V.scalar ~scale:2.0 v |> V.to_list) [@eq [0.0;2.0;4.0]]
 
 let%spec "Vec.norm should return norm of the vector" =
   let v = V.init S.three (fun i -> (float_of_int i) +. 1.0) in
@@ -76,7 +76,7 @@ let%spec "Mat.identity should return identity matrix with size" =
   M.get ~row:1 ~col:1 matrix [@eq Some (1.0)]
 
 let%spec "Mat.diagonal should return diagonal matrix with size" =
-  let matrix = M.diagonal ~size:S.two ~comp:2.0 in
+  let matrix = M.diagonal ~comp:2.0 S.two in
   M.get ~row:0 ~col:0 matrix [@eq Some (2.0)];
   M.get ~row:0 ~col:1 matrix [@eq Some (0.0)];
   M.get ~row:1 ~col:0 matrix [@eq Some (0.0)];
@@ -84,7 +84,7 @@ let%spec "Mat.diagonal should return diagonal matrix with size" =
 
 let%spec "Mat.scalar should return new matrix multiply scale" =
   let m = M.identity S.two in
-  let m = M.scalar ~scale:3.0 ~m in
+  let m = M.scalar ~scale:3.0 m in
   M.get ~row:0 ~col:0 m [@eq Some (3.0)];
   M.get ~row:0 ~col:1 m [@eq Some (0.0)];
   M.get ~row:1 ~col:0 m [@eq Some (0.0)];

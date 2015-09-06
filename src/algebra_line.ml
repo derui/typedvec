@@ -25,8 +25,8 @@ let nearest_point ?(epsilon = 0.00001) ~a ~b () =
     let para_a = ((para_v *: na') -. (angle_norm *. (para_v *: nb'))) /. para_work in
     (* bにおけるパラメトリックの値 *)
     let para_b = ((angle_norm *. (para_v *: na')) -. (para_v *: nb')) /. para_work in
-    let para_a' = V.scalar ~scale:para_a ~v:na'
-    and para_b' = V.scalar ~scale:para_b ~v:nb' in
+    let para_a' = V.scalar ~scale:para_a na'
+    and para_b' = V.scalar ~scale:para_b nb' in
     let p_a = (fst a) +: para_a'
     and p_b = (fst b) +: para_b' in
     if V.norm (p_a -: p_b) < epsilon then Collide(p_a, p_b) else Nearest(p_a, p_b)

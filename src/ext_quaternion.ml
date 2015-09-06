@@ -26,7 +26,7 @@ let make ~angle ~axis () =
   let base_sin = sin radian  in
   let normal = Vec.normalize axis in
   {quat_angle = cos radian;
-   quat_axis = Vec.scalar ~v:normal ~scale:base_sin
+   quat_axis = Vec.scalar ~scale:base_sin normal 
   }
 
 let norm {quat_axis = axis;quat_angle = angle} =
@@ -41,7 +41,7 @@ let normalize quat =
   if normed > 0.0 then
     let mangle = 1.0 /. normed in
     {quat_angle = quat.quat_angle *. mangle;
-     quat_axis = V.scalar ~v:quat.quat_axis ~scale:mangle
+     quat_axis = V.scalar ~scale:mangle quat.quat_axis 
     }
   else
     identity
@@ -114,7 +114,7 @@ let minimum_angle q1 q2 =
   let module V = Vec in
   let dotted = dot q1 q2 in
   if dotted < 0.0 then
-    ({quat_angle = -.dotted; quat_axis = V.scalar ~v:q1.quat_axis ~scale:(-1.0)}, q2)
+    ({quat_angle = -.dotted; quat_axis = V.scalar ~scale:(-1.0) q1.quat_axis}, q2)
   else
     (q1, q2)
 
@@ -164,4 +164,4 @@ let axis {quat_axis;quat_angle} =
     identity.quat_axis
   else
     let over_sin = 1.0 /. sqrt sin_theta_sq in
-    Vec.scalar ~v:quat_axis ~scale:over_sin
+    Vec.scalar ~scale:over_sin quat_axis 

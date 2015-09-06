@@ -14,10 +14,10 @@ let identity size =
        Util.range s |> List.iter (fun i -> set ~row:i ~col:i ~v:1.0 m);
        m
 
-let scalar ~m ~scale = map ~f:(fun _ _ v -> v *. scale) m
-let diagonal ~size ~comp =
+let scalar ~scale m = map ~f:(fun _ _ v -> v *. scale) m
+let diagonal ~comp size =
   let m = identity size in
-  scalar ~m ~scale:comp
+  scalar ~scale:comp m
 
 let apply_each_element f = function
   | (None, _) | (_, None) -> failwith "Two matrix must have equality row and col"
@@ -86,7 +86,7 @@ let inverse mat =
   | None -> None
   | Some det ->
      let adj = adjugate mat in
-     Some (scalar ~scale:(1.0 /. det) ~m:adj)
+     Some (scalar ~scale:(1.0 /. det) adj)
 
 module Open = struct
   let (+:) = add
