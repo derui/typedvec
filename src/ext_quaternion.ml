@@ -80,23 +80,16 @@ let to_mat quat =
   let module S = Size in
   let w = quat.quat_angle
   and (x, y, z) = extract_vec quat.quat_axis in
-  let mat = M.make ~col:Size.four ~row:Size.four ~init:0.0 in
+  let mat = M.make ~col:Size.three ~row:Size.three ~init:0.0 in
   M.set mat ~row:0 ~col:0 ~v:(1.0 -. (2.0 *. y *. y) -. (2.0 *. z *. z));
   M.set mat ~row:0 ~col:1 ~v:((2.0 *. x *. y) +. (2.0 *. w *. z));
   M.set mat ~row:0 ~col:2 ~v:((2.0 *. x *. z) -. (2.0 *. w *. y));
-  M.set mat ~row:0 ~col:3 ~v:0.0;
   M.set mat ~row:1 ~col:0 ~v:((2.0 *. x *. y) -. (2.0 *. w *. z));
   M.set mat ~row:1 ~col:1 ~v:(1.0 -. (2.0 *. x *. x) -. (2.0 *. z *. z));
   M.set mat ~row:1 ~col:2 ~v:((2.0 *. y *. z) +. (2.0 *. w *. x));
-  M.set mat ~row:1 ~col:3 ~v:0.0;
   M.set mat ~row:2 ~col:0 ~v:((2.0 *. x *. z) +. (2.0 *. w *. y));
   M.set mat ~row:2 ~col:1 ~v:((2.0 *. y *. z) -. (2.0 *. w *. x));
   M.set mat ~row:2 ~col:2 ~v:(1.0 -. (2.0 *. x *. x) -. (2.0 *. y *. y));
-  M.set mat ~row:2 ~col:3 ~v:0.0;
-  M.set mat ~row:3 ~col:0 ~v:0.0;
-  M.set mat ~row:3 ~col:1 ~v:0.0;
-  M.set mat ~row:3 ~col:2 ~v:0.0;
-  M.set mat ~row:3 ~col:3 ~v:1.0;
   mat
 
 (* construct dot product from q1 and q2. *)

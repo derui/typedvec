@@ -60,7 +60,7 @@ val axis : t -> axis
 val angle : t -> angle
 
 (** Get the rotation matrix via four by four square matrix.*)
-val to_mat : t -> (Size.four Algebra.s, Size.four Algebra.s) Algebra.mat
+val to_mat : t -> (Size.three Algebra.s, Size.three Algebra.s) Algebra.mat
 
 (** construct `obversing quaternion` between from and
     by obversing frequency.
