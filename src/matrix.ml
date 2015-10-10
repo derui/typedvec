@@ -77,4 +77,14 @@ module Make(T:TYPE):S with type num_type := T.num_type = struct
 
   let copy mat = {mat with data = to_array mat}
 
+  let submatrix ?(start_row=0) ?(start_col=0) ~row ~col m =
+    let rs = Size.to_int row
+    and cs = Size.to_int col in
+    let mat_row = row_size m |> Size.to_int
+    and mat_col = col_size m |> Size.to_int in
+    if rs + start_row > mat_row || cs + start_col > mat_col then
+      None
+    else
+      Some(init ~row ~col ~f:(fun r c -> unsafe_get ~row:(start_row + r) ~col:(start_col + c) m))
+
 end

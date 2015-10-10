@@ -67,3 +67,33 @@ let%spec "Matrix can get column as list of the matrix" =
 
   (M.col_of_mat ~col:0 mat) [@eq [0.0;10.0]];
   (M.col_of_mat ~col:1 mat) [@eq [1.0;11.0]]
+
+let%spec "Matrix can get submatrix from the matrix" =
+  let mat = M.init ~row:S.two ~col:S.two ~f:(fun r c -> float_of_int (10 * r + c)) in
+
+  match M.submatrix ~row:S.one ~col:S.one mat with
+  | None -> failwith "No any submatrix"
+  | Some(newm) -> begin
+    (M.get ~row:0 ~col:0 newm) [@eq Some(0.0)];
+    (M.row_size newm |> S.to_int) [@eq 1];
+    (M.col_size newm |> S.to_int) [@eq 1]
+  end;
+
+  match M.submatrix ~start_row:1 ~start_col:1 ~row:S.one ~col:S.one mat with
+  | None -> failwith "No any submatrix"
+  | Some(newm) -> begin
+    (M.get ~row:0 ~col:0 newm) [@eq Some(11.0)];
+    (M.row_size newm |> S.to_int) [@eq 1];
+    (M.col_size newm |> S.to_int) [@eq 1]
+  end
+
+let%spec "Matrix should return None if no have enough area to get submatrix" =
+  let mat = M.init ~row:S.two ~col:S.two ~f:(fun r c -> float_of_int (10 * r + c)) in
+
+  match M.submatrix ~row:S.three ~col:S.one mat with
+  | Some(_) -> failwith "Illegal result"
+  | None -> true [@eq true];
+
+  match M.submatrix ~row:S.one ~col:S.three mat with
+  | Some(_) -> failwith "Illegal result"
+  | None -> true [@eq true]

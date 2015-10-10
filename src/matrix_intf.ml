@@ -50,6 +50,12 @@ module type S = sig
   (* [to_list mat] get the two dimensional list of matrix. *)
 
   val copy: ('a, 'b, num_type) t -> ('a, 'b, num_type) t
-(* [copy mat] get the new matrix to be copied from [mat] *)
+  (* [copy mat] get the new matrix to be copied from [mat] *)
+
+  val submatrix: ?start_row:int -> ?start_col:int -> row:'a Size.t -> col:'b Size.t -> ('c Size.t, 'd Size.t, num_type) t ->
+    ('a Size.t, 'b Size.t, num_type) t option
+(* [submatrix ~start_pos ~size m] get a submatrix is size of [size] from the [m] at [start_pos].
+   If [start_pos] and [size] gets over the size of [m], you get [None].
+*)
 
 end

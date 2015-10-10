@@ -37,6 +37,24 @@ let mul_m2v m v =
   ) row_range;
   v'
 
+let cross_to_mat v =
+  (* Initialize matrix *)
+  let m = Mat.identity S.three in
+  Mat.set ~row:0 ~col:0 ~v:0.0 m;
+  Mat.set ~row:1 ~col:1 ~v:0.0 m;
+  Mat.set ~row:2 ~col:2 ~v:0.0 m;
+  (* Set vector values. *)
+  let x,y,z = (Vec.unsafe_get v 0, Vec.unsafe_get v 1, Vec.unsafe_get v 2) in
+  Mat.set ~row:1 ~col:0 ~v:z m;
+  Mat.set ~row:0 ~col:1 ~v:(-.z) m;
+
+  Mat.set ~row:2 ~col:0 ~v:(-.y) m;
+  Mat.set ~row:0 ~col:2 ~v:y m;
+
+  Mat.set ~row:2 ~col:1 ~v:x m;
+  Mat.set ~row:1 ~col:2 ~v:(-.x) m;
+  m
+
 module Open = struct
   let ( *> ) = mul_v2m
   let ( *< ) = mul_m2v
