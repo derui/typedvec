@@ -9,6 +9,6 @@ archive(native) = "typedvec.cmxa"
 package "ppx" (
   version = "0.2.0"
   description = "Typedvec direct generation using concrete syntax"
-  requires = "ppx_tools,typedvec"
-  ppx = "./ppx_typedvec"
+  requires = "ppx_driver ppx_tools typedvec"
+  ppx = "./ppx_typedvec.run"
 )

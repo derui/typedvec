@@ -1,3 +1,4 @@
+[%%suite
 module T = Typedvec
 
 let%spec "Size to int" =
@@ -24,3 +25,4 @@ let%spec "Size can convert from int to type of Size" =
   (M.to_int) [@eq 10];
   (M.to_int = (to_int ten)) [@true]
 
+]

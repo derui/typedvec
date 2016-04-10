@@ -48,8 +48,6 @@ let names_to_module_path paths =
   | f :: paths ->
     List.fold_left (fun ident path -> Ldot (ident, path)) (Lident f) paths
 
-let to_ounit_fun ?(loc=Location.none) name = Exp.ident {txt = names_to_module_path ["OUnit2";name];loc}
-
 module Exp = struct
   let is_ident = function
     | {pexp_desc = Pexp_ident _;_} -> true

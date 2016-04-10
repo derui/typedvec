@@ -1,3 +1,4 @@
+[%%suite
 module T = Typedvec
 
 let%spec "Util.range should be able to make integer list" =
@@ -7,3 +8,4 @@ let%spec "Util.range should be able to make integer list" =
   (range 1) [@eq [0]];
   (range 2) [@eq [0;1]]
 
+]

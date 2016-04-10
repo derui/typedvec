@@ -27,13 +27,26 @@ let expand_vec ~loc = function
     match e with
     | {pexp_desc = Pexp_construct ({txt = Lident "::";_}, _);_} ->
        let list = Ast_util.tup_to_list e in
-       let tupled_list = Ast_util.list list in
        let hd = List.hd list in
        let size = make_size_type list in
+       let indexed_list = List.mapi (fun index v ->
+          (Exp.constant (Const_int (index)), v)
+       ) list in
+       let set_value = List.map (fun v ->
+         let index = fst v
+         and v_ = snd v in
+         [%expr Typedvec.Std.Algebra.Vec.set vec ~index:[%e index] ~v:[%e v_];]) indexed_list in
+       let set_value = match set_value with
+         | [] -> failwith "No any element of list %vec given?"
+         | base :: rest -> List.fold_left (fun memo i ->
+           Exp.sequence memo i
+         ) base rest
+       in
+            
        (* Expand expr using metaquot. *)
        Some [%expr
              let vec = Typedvec.Std.Algebra.Vec.make [%e size] [%e hd] in
-             List.iteri (fun index v -> Typedvec.Std.Algebra.Vec.set vec ~index ~v) [%e tupled_list];
+             [%e set_value];
              vec
             ]
     | {pexp_desc = Pexp_construct ({txt = Lident "[]";_},_);_} ->
@@ -44,7 +57,7 @@ let expand_vec ~loc = function
 
 (* Mapper to reconstruct for assertions that are change to some assertion method *)
 let rec extension_mapper argv = {default_mapper with
-  expr = fun mapper expr ->
+  expr = fun mapper expr -> (
     match expr with
     | {pexp_desc = Pexp_extension ({txt="vec";loc}, payload);_} -> begin
       match expand_vec ~loc payload with
@@ -52,6 +65,7 @@ let rec extension_mapper argv = {default_mapper with
       | None -> default_mapper.expr mapper expr
     end
     | _ -> default_mapper.expr mapper expr
+  );
 }
 
 let () = run_main extension_mapper

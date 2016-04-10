@@ -1,25 +1,38 @@
-(** Ext_affine provides functions to operations of Affine conversion via vector and matrix.
+(**
+   Ext_affine provides type and operations to fold affine transformations and get the folded matrix.
 
-    Provided operations are as follows;
-    - translation
+   Provided operations are as follows;
+   - translation
+   - rotation
+   - scaling
 
     @author derui
     @version 0.1
 *)
 
-val translation_to_mat : ?dir:[`Row | `Col] -> ('s Algebra.s) Algebra.vec -> ('s Algebra.s, 's Algebra.s) Algebra.mat
-(** [transiation_to_mat vec] gets the Translation matrix is moved to [vec]. What default argument [~dir] is [`Row].
-    [transiation_to_mat ~dir:`Row vec] gets the Translation matrix to multiply row vector.
-    [transiation_to_mat ~dir:`Col vec] gets the Translation matrix to multiply column vector.
+(* The type of affine *)
+type 'a t
 
-    Notice: the [vec] should be a homogeneous coordinate.
+val make: 'a Algebra.s -> 'a t
+(* [make size] make a affine data type for [size] dimension.
+   Internally, affine data type has a matrix having [size] + 1 dimension to calculate affine transformation.
 *)
 
-val translation_of_mat: ?dir:[`Row | `Col] -> ('s Algebra.s, 's Algebra.s) Algebra.mat ->
-  ('s Algebra.s) Algebra.vec
-(** [translation_of_mat ?dir mat] get the vector of translation part of the matrix.
-    What default argument [?dir] is [`Row].
+val translate : 'a t -> vec:'a Algebra.s Algebra.vec -> 'a t
+(* [translate affine ~vec] add translation matrix to [affine]. What multiple apply this get concatted translations. *)
 
-    [translation_of_mat ~dir:`Row mat] get bottom-edge row vector.
-    [translation_of_mat ~dir:`Col mat] get right-edge column vector.
+val rotate: 'a t -> rotate:('a Algebra.s, 'a Algebra.s) Algebra.mat -> 'a t
+(* [rotate affine ~rotate] multiply rotation matrix to [affine]. What multiple apply this get rotated affine transformation
+   that applied each rotate matrix.
 *)
+
+val scale: 'a t -> scale:'a Algebra.s Algebra.vec -> 'a t
+(* [scale ~scale affine] get affine data type multiplied a scaling matrix. *)
+
+val to_mat: 'a t -> ('a Size.s Algebra.s, 'a Size.s Algebra.s) Algebra.mat
+(* [to_mat affine] get the transformation matrix multiplied all transformation matrixs,
+   [translate], [rotate] and [scale].
+*)
+
+val of_mat: size:'a Algebra.s -> ('a Size.s Algebra.s, 'a Size.s Algebra.s) Algebra.mat -> 'a t
+(* [of_mat mat] make the type of Affine from a matrix.*)
