@@ -10,3 +10,4 @@
 
 *.omc
 .omakedb*
+/setup.data

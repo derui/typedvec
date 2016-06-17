@@ -30,7 +30,7 @@ let expand_vec ~loc = function
        let hd = List.hd list in
        let size = make_size_type list in
        let indexed_list = List.mapi (fun index v ->
-          (Exp.constant (Const_int (index)), v)
+          (Exp.constant (Const.int index), v)
        ) list in
        let set_value = List.map (fun v ->
          let index = fst v
