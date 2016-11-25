@@ -1,5 +1,6 @@
-open MyFunction
-open MyOCaml
+if $(file-exists OMakeroot)
+   include MyOCaml
+   export
 
 .PHONY: test clean doc all
 
@@ -8,26 +9,8 @@ open MyOCaml
 # mark file confined directory path.
 INSTALLED = $(BIG_ROOT)/installed
 
-USE_OCAMLFIND = true
-#
-OCAMLPACKS[] =
-#
-if $(not $(OCAMLFIND_EXISTS))
-    eprintln(This project requires ocamlfind, but is was not found.)
-    eprintln(You need to install ocamlfind and run "omake --configure".)
-    exit 1
-
-OCAMLINCLUDES += src
-
-NATIVE_ENABLED = $(OCAMLOPT_EXISTS)
-BYTE_ENABLED = $(not $(OCAMLOPT_EXISTS))
-
-OCAMLFLAGS    += -bin-annot
-OCAMLCFLAGS   +=
-OCAMLOPTFLAGS +=
-# OCAML_LINK_FLAGS +=
-# OCAML_BYTE_LINK_FLAGS +=
-# OCAML_NATIVE_LINK_FLAGS +=
+setup.ml: _oasis
+	oasis setup
 
 LIB = typedvec
 
