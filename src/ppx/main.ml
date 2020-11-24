@@ -4,8 +4,8 @@ open Ast_helper
 exception Error of Location.t * string
 
 let make_size_type ~loc list =
-  let rec succ' typ = function [] -> typ | _ :: rest -> succ' [%expr Typedvec.Std.Size.succ [%e typ]] rest in
-  succ' [%expr Typedvec.Std.Size.zero] list
+  let rec succ' typ = function [] -> typ | _ :: rest -> succ' [%expr Typedvec.Size.succ [%e typ]] rest in
+  succ' [%expr Typedvec.Size.zero] list
 
 (* Expand [%vec] extension to an expression what make vector. *)
 let expand_vec ~loc = function
@@ -20,7 +20,7 @@ let expand_vec ~loc = function
             List.map
               (fun v ->
                 let index = fst v and v_ = snd v in
-                [%expr Typedvec.Std.Algebra.Vec.set vec ~index:[%e index] ~v:[%e v_]])
+                [%expr Typedvec.Algebra.Vec.set vec ~index:[%e index] ~v:[%e v_]])
               indexed_list
           in
           let set_value =
@@ -31,7 +31,7 @@ let expand_vec ~loc = function
 
           (* Expand expr using metaquot. *)
           [%expr
-            let vec = Typedvec.Std.Algebra.Vec.make [%e size] [%e hd] in
+            let vec = Typedvec.Algebra.Vec.make [%e size] [%e hd] in
             [%e set_value];
             vec]
       | { pexp_desc = Pexp_construct ({ txt = Lident "[]"; _ }, _); _ } ->
