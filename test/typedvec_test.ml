@@ -9,4 +9,5 @@ let () =
       ("Matrix", Test_matrix.tests);
       ("Line", Test_line.tests);
       ("Algebra", Test_algebra.tests);
+      ("Affine", Test_affine.tests);
     ]
