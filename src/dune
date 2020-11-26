@@ -1,0 +1,3 @@
+(library
+ (name typedvec)
+ (public_name typedvec))

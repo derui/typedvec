@@ -1,0 +1,6 @@
+(library
+ (name main)
+ (kind ppx_rewriter)
+ (public_name typedvec.ppx)
+ (preprocess (pps ppxlib.metaquot))
+ (libraries ppxlib typedvec))

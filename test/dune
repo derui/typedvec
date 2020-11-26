@@ -1,0 +1,4 @@
+(test
+ (name typedvec_test)
+ (libraries alcotest typedvec)
+ (preprocess (pps typedvec.ppx)))

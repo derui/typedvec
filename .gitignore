@@ -1,13 +1,2 @@
-*.cmt
-*.cmti
-*.cmo
-*.cmx
-*.cma
-*.cmxa
-*.o
-*.a
-*.cmi
-
-*.omc
-.omakedb*
-/setup.data
+_build/
+.merlin
